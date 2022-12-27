@@ -5,7 +5,14 @@ Aims to provide better documentation, offer more relibility and code that can be
 This project is developed using NetBeans IDE. This allows code to be uploaded to the raspberry pi over wifi.
 
 ## Notes
+### External Libraries
+All external libraries are included and configured in this repo.
+- JeroMQ
+- Msgpack
+- jSerialComm
 All files int the `external` package are from external libraries, you should not edit them.
+### Brief Explanation of files
+TODO
 
 ## Setup
 ### Setting up the IDE
@@ -14,6 +21,7 @@ All files int the `external` package are from external libraries, you should not
 - Tools > Java Platforms > Add Platform > Remote Java Standard Edition > Fill out the values > Make sure to test platform
 - java.home should be `/usr/lib/jvm/java-17-openjdk-arm64`
 - if you get stuck, refer to this: https://www.instructables.com/Efficient-Development-of-Java-for-the-Raspberry-Pi/
+- if you see a large number of packages starting with `external.*`, switch the "Projects" to "Files" view to declutter.
 
 ### Running the code
 - Make sure your code is configured to use the remote jdk created ^
