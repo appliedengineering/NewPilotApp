@@ -5,8 +5,6 @@
 package newpilotapp.drivers;
 
 import com.fazecast.jSerialComm.SerialPort;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
