@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import newpilotapp.data.DataManager;
+import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.CompassDriver.CompassData;
 import newpilotapp.framework.data.LiveDataObserver;
 import newpilotapp.gui.constants.GuiConstants;
 
@@ -21,6 +23,7 @@ import newpilotapp.gui.constants.GuiConstants;
 public class StatusBar extends JPanel {
     
     JLabel networkStatusLabel;
+    JLabel currentStatusLabel;
 
     public StatusBar() {
         setDoubleBuffered(true);
@@ -39,6 +42,12 @@ public class StatusBar extends JPanel {
     private void setUpNetworkStatus() {
         networkStatusLabel  = new JLabel();
         networkStatusLabel.setForeground(Color.white);
+        
+        currentStatusLabel  = new JLabel();
+        currentStatusLabel.setForeground(Color.white);
+        
+        // add(currentStatusLabel, BorderLayout.CENTER);
+
   
         add(networkStatusLabel, BorderLayout.EAST);
         
@@ -54,6 +63,17 @@ public class StatusBar extends JPanel {
         
         }
         );
+        
+//        DataManager.errorStatus.observe(new LiveDataObserver<String>() {
+//            @Override
+//            public void update(String network) {
+//                currentStatusLabel.setText(network);
+//            }
+//        
+//        }
+//        );
+        
+        
                 
     }
     

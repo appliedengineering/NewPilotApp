@@ -6,6 +6,8 @@ package newpilotapp.main;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import newpilotapp.data.DataManager;
 import newpilotapp.gui.AppWindow;
 import newpilotapp.networking.AlignmentNetworkingDriver;
@@ -17,7 +19,44 @@ import newpilotapp.networking.AlignmentNetworkingDriver;
 public class AppLauncher {
     public static AppWindow appWindow;
     public static AlignmentNetworkingDriver alignmentNetworking;
+    
+    public static HardwareDriverLoop hardwareLoop;
+    public static Thread hardwareThread;
+
+
     public static void main(String[] args) {
+        if(args.length == 0) {
+            return;
+        }
+        if(!args[0].equals("run")) {
+            return;
+        }
+
+        
+        // TESTING
+            try {
+                System.setProperty("sun.java2d.opengl", "true");
+                    // Set System L&F
+                UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            } 
+            catch (UnsupportedLookAndFeelException e) {
+               // handle exception
+            }
+            catch (ClassNotFoundException e) {
+               // handle exception
+            }
+            catch (InstantiationException e) {
+               // handle exception
+            }
+            catch (IllegalAccessException e) {
+               // handle exception
+            }
+        // END TESTING
+        
+        
+        hardwareLoop = new HardwareDriverLoop();
+        hardwareThread = new Thread(hardwareLoop);
+        hardwareThread.start();
         
         alignmentNetworking = new AlignmentNetworkingDriver();
         alignmentNetworking.start();
@@ -25,6 +64,7 @@ public class AppLauncher {
         appWindow = new AppWindow();
         
         appWindow.showFrame();
+        
         
 //        new Thread(() -> {
 //            while(true) {

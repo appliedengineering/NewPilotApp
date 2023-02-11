@@ -4,6 +4,7 @@
  */
 package newpilotapp.drivers;
 
+import newpilotapp.data.DataManager;
 import newpilotapp.logging.Console;
 
 /**
@@ -16,7 +17,7 @@ public class CompassDriver extends SerialDriver {
 
     public CompassDriver() {
         setCommand(new byte[] {67});
-        setReadTimeout(100);
+        setReadTimeout(10);
         setSerialPortName("/dev/ttyACM0");
     }
 
@@ -30,8 +31,11 @@ public class CompassDriver extends SerialDriver {
             compassData.compassHeading = Double.parseDouble(tokens[0]);
             compassData.systemCalibration = Integer.parseInt(tokens[1]);
             compassData.magneticCalibration = Integer.parseInt(tokens[2]);
+            
+            DataManager.compassHeading.setValue(compassData);
 
         } catch (Exception e) {
+            Console.warn(e.getMessage());
             // corrupted data
             Console.warn("Corrupted compass data");
         }

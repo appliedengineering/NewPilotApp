@@ -5,13 +5,14 @@
 package newpilotapp.networking;
 
 import external.org.zeromq.*;
+import newpilotapp.logging.Console;
 
 /**
  * Class that handles multi-threading for zeromq networking <br>
  * Acts as the *SERVER*
  * @author Jeffrey
  */
-public class AlignmentNetworkingDriver implements Runnable{
+public class AlignmentNetworkingDriver implements Runnable {
     
     // predefined connection settings
     public static final int PORT = 5555;
@@ -52,11 +53,15 @@ public class AlignmentNetworkingDriver implements Runnable{
             while (isRunning) {
                 String request = alignSocket.recvStr();
            
-           // TODO: get the data and send
-           
-           // currently just echo server for testing
+                // TODO: get the data and send
+                
+                Console.log("Got data: " + request);
+
+                // currently just echo server for testing
                 alignSocket.send(request);
             }
+        } catch (Exception e) {
+            Console.error(e.toString());
         }
        
     }

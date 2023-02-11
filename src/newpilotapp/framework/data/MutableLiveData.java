@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ *  Similar to MutableLiveData<> from Android
  * @author Jeffrey
  */
-public class LiveData<T> {
+public class MutableLiveData<T> {
     private T data;
     
     private List<LiveDataObserver<T>> observers = new ArrayList<>();
     
-    public LiveData() {}
+    public MutableLiveData() {}
 
-    public LiveData(T data) {
+    public MutableLiveData(T data) {
         this.data = data;
     }
     

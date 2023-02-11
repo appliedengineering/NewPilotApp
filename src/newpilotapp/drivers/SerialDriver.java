@@ -6,6 +6,7 @@ package newpilotapp.drivers;
 
 import com.fazecast.jSerialComm.SerialPort;
 import java.util.Arrays;
+import newpilotapp.logging.Console;
 
 /**
  * Serial hardware driver
@@ -13,7 +14,7 @@ import java.util.Arrays;
  */
 public class SerialDriver extends Driver {
     
-    private int baudRate = 9600;
+    private int baudRate = 115200;
     private int dataBits = 8;
     private int stopBits = SerialPort.ONE_STOP_BIT;
     private int parity   = SerialPort.NO_PARITY;
@@ -33,17 +34,16 @@ public class SerialDriver extends Driver {
         SerialPort[] availablePorts = SerialPort.getCommPorts();
 
         // use the for loop to print the available serial ports
-        System.out.println("Available Serial Ports");
+        Console.log("Available Serial Ports");
         serialPort = null;
         for(SerialPort s : availablePorts) {
-             System.out.print(s.toString() + " " + s.getSystemPortPath());
+             Console.log(s.toString() + " " + s.getSystemPortPath());
              if(s.getSystemPortPath().equals(serialPortName)) {
                 serialPort = s;
-                System.out.print(" <active>"); // indicator
              }
              System.out.println();
         }
-        if(serialPort == null) throw new IllegalStateException("Serial port not found!!!"); 
+        if(serialPort == null) throw new IllegalStateException(String.format("Serial port: %s not found!!! (%s)", serialPortName, this.getClass().getName())); 
 
         //Sets all serial port parameters at one time
         serialPort.setComPortParameters(baudRate,
@@ -89,10 +89,10 @@ public class SerialDriver extends Driver {
             int numRead = serialPort.readBytes(readBuffer,
                                                  readBuffer.length);
             serialData.byteData = Arrays.copyOfRange(readBuffer, 0, numRead);
-            System.out.print("Read " + numRead + " bytes - ");
+            // System.out.print("Read " + numRead + " bytes - ");
             String S; 
             S = new String(readBuffer, "UTF-8");
-            System.out.println("Received -> "+ S);
+            // System.out.println("Received -> "+ S);
         } catch (Exception e) {
             // corrupted data
         }
