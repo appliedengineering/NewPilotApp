@@ -6,6 +6,7 @@ package newpilotapp.gui.components.chart;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -20,13 +21,14 @@ public class CompassChart extends JPanel {
     
     private double angle = 90;
     private String title = "Chart";
+    private boolean hasData = false;
     
     private JLabel label;
 
     public CompassChart(String titleNew) {
         this.title = titleNew;
         this.setBorder(BorderFactory.createTitledBorder(
-        BorderFactory.createEtchedBorder(), titleNew, TitledBorder.LEFT, TitledBorder.TOP));
+        BorderFactory.createEtchedBorder(), title, TitledBorder.LEFT, TitledBorder.TOP));
         label = new JLabel();
         //this.add(label);
     }
@@ -51,6 +53,11 @@ public class CompassChart extends JPanel {
         
         g.clearRect(widthPadding, heightPadding, width, width);
         
+        if(!hasData) {    
+            Graphics2D g2 = (Graphics2D) g;
+                g2.drawString("No Data", widthPadding + padding, heightPadding + padding);
+            return;
+        }
         
         g.setColor(Color.BLACK);
         
@@ -70,5 +77,16 @@ public class CompassChart extends JPanel {
         this.repaint();
         //label.setText(String.valueOf(angle));
     }
+
+    public boolean isHasData() {
+        return hasData;
+    }
+
+    public void setHasData(boolean hasData) {
+        this.hasData = hasData;
+        if(hasData == false) { repaint();}
+
+    }
+    
     
 }

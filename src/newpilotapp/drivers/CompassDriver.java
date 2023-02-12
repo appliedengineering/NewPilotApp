@@ -18,7 +18,7 @@ public class CompassDriver extends SerialDriver {
     public CompassDriver() {
         setCommand(new byte[] {67});
         setReadTimeout(10);
-        setSerialPortName("/dev/ttyACM0");
+        setSerialPortName("1-1.2"); // port location
     }
 
     @Override
@@ -35,9 +35,11 @@ public class CompassDriver extends SerialDriver {
             DataManager.compassHeading.setValue(compassData);
 
         } catch (Exception e) {
-            Console.warn(e.getMessage());
             // corrupted data
-            Console.warn("Corrupted compass data");
+            // Console.warn("Corrupted compass data");
+            DataManager.compassHeading.setValue(null);
+
+            
         }
         return compassData;
     }

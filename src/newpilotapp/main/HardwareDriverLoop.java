@@ -21,26 +21,33 @@ public class HardwareDriverLoop implements Runnable {
 
     public volatile boolean isRunning = false;
     
-    public volatile long runDelay = 10;
+    public volatile long runDelay = 5;
     
     private void init() {
-        compassDriver.init();
-    }
-
-    @Override
-    public void run() {
         try {
-            init();
-            isRunning = true;
-            while(isRunning){
-                compassDriver.recieveData();              
-
-                try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}
-            }
+        compassDriver.init();
         } catch (Exception e) {
             // make error visible on display (bc hardware issues need to be resolved physically)
             Console.error(e.getMessage());
         }
+    }
+
+    @Override
+    public void run() {
+        
+            init();
+            isRunning = true;
+            while(isRunning){
+                try {
+                compassDriver.recieveData();    
+                } catch (Exception e) {
+                    // make error visible on display (bc hardware issues need to be resolved physically)
+                    Console.error(e.getMessage());
+                }
+
+                try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}
+            }
+        
        
     }
     

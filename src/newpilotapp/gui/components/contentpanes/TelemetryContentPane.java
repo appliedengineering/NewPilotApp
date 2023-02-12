@@ -38,8 +38,12 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         DataManager.compassHeading.observe(new LiveDataObserver<CompassDriver.CompassData> () {
             @Override
             public void update(CompassDriver.CompassData data) {
-                if(data != null)
-                compassChart.setAngle(data.compassHeading);
+                if(data == null) {
+                    compassChart.setHasData(false);
+                } else {
+                    compassChart.setHasData(true);
+                    compassChart.setAngle(data.compassHeading);
+                }
             }
             
         });

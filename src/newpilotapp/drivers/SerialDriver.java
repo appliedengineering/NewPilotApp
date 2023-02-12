@@ -31,19 +31,26 @@ public class SerialDriver extends Driver {
      * Initializes an interface
      */
     public void init() {
+        init(true);
+    }
+    public void init(boolean isFirst) {
         SerialPort[] availablePorts = SerialPort.getCommPorts();
 
         // use the for loop to print the available serial ports
-        Console.log("Available Serial Ports");
+        if(isFirst) Console.log("Available Serial Ports");
         serialPort = null;
         for(SerialPort s : availablePorts) {
-             Console.log(s.toString() + " " + s.getSystemPortPath());
-             if(s.getSystemPortPath().equals(serialPortName)) {
+             if(isFirst) Console.log(s.toString() + " " + s.getSystemPortPath() + " " + s.getPortLocation());
+             if(s.getPortLocation().equals(serialPortName)) {
                 serialPort = s;
              }
-             System.out.println();
+             if(isFirst) System.out.println();
         }
-        if(serialPort == null) throw new IllegalStateException(String.format("Serial port: %s not found!!! (%s)", serialPortName, this.getClass().getName())); 
+        
+        if(serialPort == null) {
+            if(isFirst) throw new IllegalStateException(String.format("Serial port: %s not found!!! (%s)", serialPortName, this.getClass().getName()));
+            if(!isFirst)  return;
+        }
 
         //Sets all serial port parameters at one time
         serialPort.setComPortParameters(baudRate,
@@ -64,6 +71,8 @@ public class SerialDriver extends Driver {
      */
     public void stop(){
         serialPort.closePort();
+        serialPort = null;
+
     }
     
     /**
@@ -81,20 +90,32 @@ public class SerialDriver extends Driver {
     @Override
     public SerialData recieveData() {
         SerialData serialData = new SerialData();
-        if(serialPort == null) throw new IllegalStateException("Serial interface is null, did you call init()?");
-
+        if(serialPort == null) {
+            // restart
+            this.init(false);
+            // if its still null, just return blank data
+            if(serialPort == null) return serialData;
+        }
         try {
             byte[] readBuffer = new byte[220];
             serialPort.writeBytes(command, command.length);
             int numRead = serialPort.readBytes(readBuffer,
                                                  readBuffer.length);
+            
+            if(numRead == -1) {
+                // somethings wrong
+                this.stop();
+            }
+            
             serialData.byteData = Arrays.copyOfRange(readBuffer, 0, numRead);
             // System.out.print("Read " + numRead + " bytes - ");
             String S; 
             S = new String(readBuffer, "UTF-8");
             // System.out.println("Received -> "+ S);
+            
         } catch (Exception e) {
             // corrupted data
+            Console.log(e.toString());
         }
         
         return serialData;
