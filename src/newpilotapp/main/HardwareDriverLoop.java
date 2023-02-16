@@ -7,8 +7,9 @@ package newpilotapp.main;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import newpilotapp.data.DataManager;
-import newpilotapp.drivers.CompassDriver;
-import newpilotapp.drivers.CompassDriver.CompassData;
+import newpilotapp.drivers.Sector2aDriver;
+import newpilotapp.drivers.Sector2bDriver;
+import newpilotapp.drivers.Sector2bDriver.CompassData;
 import newpilotapp.logging.Console;
 
 /**
@@ -17,15 +18,20 @@ import newpilotapp.logging.Console;
  */
 public class HardwareDriverLoop implements Runnable {
     
-    private CompassDriver compassDriver = new CompassDriver();
+    private Sector2bDriver sector2bDriver = new Sector2bDriver();
 
+    private Sector2aDriver sector2aDriver = new Sector2aDriver();
+
+    
     public volatile boolean isRunning = false;
     
     public volatile long runDelay = 5;
     
     private void init() {
         try {
-        compassDriver.init();
+        sector2bDriver.init();
+        sector2aDriver.init();
+
         } catch (Exception e) {
             // make error visible on display (bc hardware issues need to be resolved physically)
             Console.error(e.getMessage());
@@ -39,7 +45,10 @@ public class HardwareDriverLoop implements Runnable {
             isRunning = true;
             while(isRunning){
                 try {
-                compassDriver.recieveData();    
+                    sector2bDriver.recieveData();    
+                    sector2aDriver.recieveData();    
+                    sector2aDriver.sendData();    
+                                        
                 } catch (Exception e) {
                     // make error visible on display (bc hardware issues need to be resolved physically)
                     Console.error(e.getMessage());
@@ -56,7 +65,7 @@ public class HardwareDriverLoop implements Runnable {
     }
 
     public void stopAllRunningTasks() {
-        compassDriver.stop();
+        sector2bDriver.stop();
     }
     
     

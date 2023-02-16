@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import newpilotapp.data.DataManager;
-import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.Sector2bDriver;
 import newpilotapp.framework.data.LiveDataObserver;
 import newpilotapp.gui.TabbedContentPane;
 import newpilotapp.gui.components.chart.CompassChart;
@@ -35,9 +35,9 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
 //        this.setLayout(new BorderLayout());
 //        this.add(compassChart, BorderLayout.CENTER);
         
-        DataManager.compassHeading.observe(new LiveDataObserver<CompassDriver.CompassData> () {
+        DataManager.compassHeading.observe(new LiveDataObserver<Sector2bDriver.CompassData> () {
             @Override
-            public void update(CompassDriver.CompassData data) {
+            public void update(Sector2bDriver.CompassData data) {
                 if(data == null) {
                     compassChart.setHasData(false);
                 } else {

@@ -11,8 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import newpilotapp.data.DataManager;
-import newpilotapp.drivers.CompassDriver;
-import newpilotapp.drivers.CompassDriver.CompassData;
+
 import newpilotapp.framework.data.LiveDataObserver;
 import newpilotapp.gui.constants.GuiConstants;
 

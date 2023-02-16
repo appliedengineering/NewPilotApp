@@ -6,6 +6,7 @@ package newpilotapp.gui.components.contentpanes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import newpilotapp.data.DataManager;
@@ -18,7 +19,7 @@ import newpilotapp.gui.TabbedContentPane.ContentPane;
  */
 public class DebugContentPane extends ContentPane {
     
-    private JTextArea debugOut;
+    private JEditorPane debugOut;
     
 
     public DebugContentPane() {
@@ -30,9 +31,12 @@ public class DebugContentPane extends ContentPane {
         this.setLayout(new BorderLayout());
         
         this.title = "Debug Pane";
-        debugOut = new JTextArea();
-        debugOut.setEnabled(false);
-
+        debugOut = new JEditorPane();
+        
+        debugOut.setForeground(Color.black);
+        debugOut.setEditable(false);
+        
+        
         JScrollPane scrollPane = new JScrollPane(debugOut);
 
         

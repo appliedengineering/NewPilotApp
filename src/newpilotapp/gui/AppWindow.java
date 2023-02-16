@@ -18,8 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import newpilotapp.drivers.CompassDriver;
-import newpilotapp.drivers.CompassDriver.CompassData;
 import newpilotapp.gui.TabbedContentPane.ContentPane;
 import newpilotapp.gui.components.StatusBar;
 import newpilotapp.gui.components.contentpanes.DebugContentPane;
@@ -41,6 +39,9 @@ public class AppWindow  {
     private TabbedContentPane content;
     static GraphicsDevice device = GraphicsEnvironment
         .getLocalGraphicsEnvironment().getScreenDevices()[0];
+    
+    private DebugContentPane debugPane;
+    private TelemetryContentPane telemetry;
 
     
     
@@ -58,11 +59,13 @@ public class AppWindow  {
 
         
         content = new TabbedContentPane();
-        DebugContentPane debugPane = new DebugContentPane();
+        debugPane = new DebugContentPane();
         content.addPane(debugPane);
-        TelemetryContentPane test1Pane = new TelemetryContentPane();
-        test1Pane.title = "Telemetry Pane";
-        content.addPane(test1Pane);
+        
+        telemetry = new TelemetryContentPane();
+        telemetry.title = "Telemetry Pane";
+        content.addPane(telemetry);
+        
         frame.add(content, BorderLayout.CENTER);
 
         frame.add(new StatusBar(), BorderLayout.SOUTH);

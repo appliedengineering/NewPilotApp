@@ -4,11 +4,8 @@
  */
 package newpilotapp.main;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import newpilotapp.data.DataManager;
 import newpilotapp.gui.AppWindow;
 import newpilotapp.networking.AlignmentNetworkingDriver;
 
@@ -38,6 +35,7 @@ public class AppLauncher {
                 System.setProperty("sun.java2d.opengl", "true");
                     // Set System L&F
                 UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+
             } 
             catch (UnsupportedLookAndFeelException e) {
                // handle exception

@@ -21,8 +21,6 @@ public class SystemPropertyDriver extends Driver {
         fileName = propertyFilePath;
     }
     
-    
-    @Override
     public DriverData recieveData() {
        
         String line = null;

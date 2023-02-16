@@ -14,7 +14,7 @@ public abstract class Driver {
      * Returns any data received from this interface
      * @return 
      */
-    public abstract DriverData recieveData();
+    // public abstract DriverData recieveData(byte[] command);
     
     /**
      * Notifies is data is ready to be read by recieveData() - this only applies to network connections

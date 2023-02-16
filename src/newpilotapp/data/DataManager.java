@@ -4,7 +4,10 @@
  */
 package newpilotapp.data;
 
-import newpilotapp.drivers.CompassDriver;
+import java.util.List;
+import java.util.Map;
+import newpilotapp.drivers.Sector2aDriver;
+import newpilotapp.drivers.Sector2bDriver;
 import newpilotapp.framework.data.MutableLiveData;
 
 /**
@@ -20,7 +23,17 @@ public class DataManager {
     public static MutableLiveData<String> errorStatus = new MutableLiveData<>("No errors");
     
     // Sensor Data
-    public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(); 
+    public static MutableLiveData<Sector2bDriver.CompassData> compassHeading = new MutableLiveData<>(); 
+    public static MutableLiveData<Double> ambientTemp = new MutableLiveData<>();
+    public static MutableLiveData<Sector2aDriver.GpsData> localGpsData = new MutableLiveData<>();
+    public static MutableLiveData<Sector2aDriver.GpsData> remoteGpsData = new MutableLiveData<>();
+    
+    public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
+
+
+
+    
+    public static MutableLiveData<Map<String, Integer>> dataFromBoatController = new MutableLiveData<>(); // data provided by elec
 
             
 }

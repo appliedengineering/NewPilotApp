@@ -5,25 +5,37 @@
 package newpilotapp.drivers;
 
 import newpilotapp.data.DataManager;
-import newpilotapp.logging.Console;
+import newpilotapp.drivers.SerialDriver.SerialData;
 
 /**
  *
  * @author Jeffrey
  */
-public class CompassDriver extends SerialDriver {
+public class Sector2bDriver { // for sector2b, labeled on the diagram in the software folder
+    
+    
+    SerialDriver sector2bSerial = new SerialDriver();
     
     private CompassData compassData = new CompassData();
+    
+    private static final byte[] COMPASS_COMMAND_BYTES = new byte[] {76};
 
-    public CompassDriver() {
-        setCommand(new byte[] {67});
-        setReadTimeout(10);
-        setSerialPortName("1-1.2"); // port location
+    public Sector2bDriver() {
+        sector2bSerial = new SerialDriver();
+        sector2bSerial.setReadTimeout(10);
+        sector2bSerial.setSerialPortName("1-1.2"); // port location
+    }
+    
+    public void init(){
+        sector2bSerial.init();
+    }
+    
+    public void stop(){
+        sector2bSerial.stop();
     }
 
-    @Override
-    public CompassData recieveData() {
-        SerialData serialData = super.recieveData();
+    public void recieveData() {
+        SerialData serialData = sector2bSerial.recieveData(COMPASS_COMMAND_BYTES);
         // try to parse data, catch exceptions
         try {
             String s = new String(serialData.byteData, "UTF-8");
@@ -41,11 +53,7 @@ public class CompassDriver extends SerialDriver {
 
             
         }
-        return compassData;
     }
-    
-    
-    
     
     public static class CompassData extends SerialData {
         public double compassHeading;

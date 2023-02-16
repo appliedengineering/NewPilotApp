@@ -56,8 +56,14 @@ public class AlignmentNetworkingDriver implements Runnable {
                 // TODO: get the data and send
                 
                 Console.log("Got data: " + request);
+                
+                // set
+                // TODO: DataManager.remoteGpsData = parse();
 
+                // TODO: calc angle and set to DataManager.telemetryHeading
                 // currently just echo server for testing
+                
+                // TODO: send DataManager.localGpsData.getValue();
                 alignSocket.send(request);
             }
         } catch (Exception e) {

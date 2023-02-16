@@ -22,7 +22,7 @@ public class SerialDriver extends Driver {
     
     private SerialPort serialPort;
     
-    private byte[] command = new byte[0];
+    // private byte[] command = new byte[0];
     
     private String serialPortName = null;
 
@@ -83,12 +83,11 @@ public class SerialDriver extends Driver {
         init();
     }
     
-    public void setCommand(byte[] command) {
-        this.command = command;
-    }
+//    public void setCommand(byte[] command) {
+//        this.command = command;
+//    }
 
-    @Override
-    public SerialData recieveData() {
+    public SerialData recieveData(byte[] command) {
         SerialData serialData = new SerialData();
         if(serialPort == null) {
             // restart
