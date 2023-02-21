@@ -15,7 +15,7 @@ import external.org.zeromq.ZMQ.Socket;
  */
 public class GroundStationClientAlignment {
     
-    private final static int    REQUEST_TIMEOUT = 2500;                  //  msecs, (> 1000!)
+    private final static int    REQUEST_TIMEOUT = 1000;                  //  msecs
     private final static int    REQUEST_RETRIES = 3;                     //  Before we abandon
     private final static String SERVER_ENDPOINT = "tcp://localhost:5555";
 

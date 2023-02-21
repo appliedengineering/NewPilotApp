@@ -4,7 +4,6 @@
  */
 package newpilotapp.gui.components.contentpanes;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import newpilotapp.data.DataManager;

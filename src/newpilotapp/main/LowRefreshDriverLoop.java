@@ -4,34 +4,24 @@
  */
 package newpilotapp.main;
 
+import newpilotapp.data.DataManager;
 import newpilotapp.drivers.Sector2aDriver;
 import newpilotapp.drivers.Sector2bDriver;
 import newpilotapp.logging.Console;
 
 /**
- * Real-time readings from physical hardware
+ * For data that only needs to be refreshed at a low speed
  * @author jeffrey
  */
-public class HardwareDriverLoop implements Runnable {
+public class LowRefreshDriverLoop implements Runnable {
     
-    private Sector2bDriver sector2bDriver = new Sector2bDriver();
-
-    private Sector2aDriver sector2aDriver = new Sector2aDriver();
-
     
     public volatile boolean isRunning = false;
     
-    public volatile long runDelay = 5;
+    public volatile long runDelay = 100;
     
     private void init() {
-        try {
-        sector2bDriver.init();
-        // sector2aDriver.init();
-
-        } catch (Exception e) {
-            // make error visible on display (bc hardware issues need to be resolved physically)
-            Console.error(e.getMessage());
-        }
+        
     }
 
     @Override
@@ -41,11 +31,14 @@ public class HardwareDriverLoop implements Runnable {
             isRunning = true;
             while(isRunning){
                 try {
-                    sector2bDriver.recieveData();                    
+                    // Get current size of heap in bytes
+                    long heapSize = Runtime.getRuntime().totalMemory()/1_000_000; 
+                    long heapFreeSize = Runtime.getRuntime().freeMemory()/1_000_000; 
                     
-                    //sector2aDriver.recieveData();    
-                    //sector2aDriver.sendData();    
-                                        
+                    DataManager.heapSpaceTotal.setValue(heapSize);
+                    DataManager.heapSpaceFree.setValue(heapFreeSize);
+
+                    
                 } catch (Exception e) {
                     // make error visible on display (bc hardware issues need to be resolved physically)
                     Console.error(e.getMessage());
@@ -62,7 +55,7 @@ public class HardwareDriverLoop implements Runnable {
     }
 
     public void stopAllRunningTasks() {
-        sector2bDriver.stop();
+        
     }
     
     

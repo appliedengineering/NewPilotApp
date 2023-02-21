@@ -41,7 +41,7 @@ public class SerialDriver extends Driver {
         serialPort = null;
         for(SerialPort s : availablePorts) {
              if(isFirst) Console.log(s.toString() + " " + s.getSystemPortPath() + " " + s.getPortLocation());
-             if(s.getPortLocation().equals(serialPortName)) {
+             if(s.getPortLocation().equals(serialPortName) || s.getSystemPortPath().equals(serialPortName)) {
                 serialPort = s;
              }
              if(isFirst) System.out.println();
@@ -96,7 +96,7 @@ public class SerialDriver extends Driver {
             if(serialPort == null) return serialData;
         }
         try {
-            byte[] readBuffer = new byte[220];
+            byte[] readBuffer = new byte[256];
             serialPort.writeBytes(command, command.length);
             int numRead = serialPort.readBytes(readBuffer,
                                                  readBuffer.length);
@@ -108,8 +108,8 @@ public class SerialDriver extends Driver {
             
             serialData.byteData = Arrays.copyOfRange(readBuffer, 0, numRead);
             // System.out.print("Read " + numRead + " bytes - ");
-            String S; 
-            S = new String(readBuffer, "UTF-8");
+//            String S; 
+//            S = new String(readBuffer, "UTF-8");
             // System.out.println("Received -> "+ S);
             
         } catch (Exception e) {

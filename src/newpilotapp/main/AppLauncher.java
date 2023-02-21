@@ -4,6 +4,7 @@
  */
 package newpilotapp.main;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import newpilotapp.gui.AppWindow;
@@ -18,7 +19,10 @@ public class AppLauncher {
     public static AlignmentNetworkingDriver alignmentNetworking;
     
     public static HardwareDriverLoop hardwareLoop;
+    public static LowRefreshDriverLoop lowRefreshLoop;
+    
     public static Thread hardwareThread;
+    public static Thread lowRefreshThread;
 
 
     public static void main(String[] args) {
@@ -29,39 +33,33 @@ public class AppLauncher {
             return;
         }
 
-        
-        // TESTING
-            try {
-                System.setProperty("sun.java2d.opengl", "true");
-                    // Set System L&F
-                UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-
-            } 
-            catch (UnsupportedLookAndFeelException e) {
-               // handle exception
-            }
-            catch (ClassNotFoundException e) {
-               // handle exception
-            }
-            catch (InstantiationException e) {
-               // handle exception
-            }
-            catch (IllegalAccessException e) {
-               // handle exception
-            }
-        // END TESTING
-        
+        FlatLightLaf.setup();
         
         hardwareLoop = new HardwareDriverLoop();
         hardwareThread = new Thread(hardwareLoop);
         hardwareThread.start();
         
+        lowRefreshLoop = new LowRefreshDriverLoop();
+        lowRefreshThread = new Thread(lowRefreshLoop);
+        lowRefreshThread.start();
+        
         alignmentNetworking = new AlignmentNetworkingDriver();
         alignmentNetworking.start();
         
-        appWindow = new AppWindow();
-        
-        appWindow.showFrame();
+        try {
+            javax.swing.SwingUtilities.invokeAndWait(
+                new Runnable() {
+
+                  @Override
+                  public void run() {
+                      appWindow = new AppWindow();
+
+                      appWindow.showFrame();
+                  }
+                }
+            );
+        } catch (Exception e) {
+        }
         
         
 //        new Thread(() -> {

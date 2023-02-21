@@ -20,7 +20,7 @@ public class DataManager {
     public static MutableLiveData<Boolean> networkStatus = new MutableLiveData<>(false); // true = online, false = offline
     
     // GUI
-    public static MutableLiveData<String> errorStatus = new MutableLiveData<>("No errors");
+    public static MutableLiveData<StringBuffer> errorStatus = new MutableLiveData<>(new StringBuffer("--- START OF LOG ---"));
     
     // Sensor Data
     public static MutableLiveData<Sector2bDriver.CompassData> compassHeading = new MutableLiveData<>(); 
@@ -31,9 +31,12 @@ public class DataManager {
     public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
 
 
+    // Hardware Vitals
+    public static MutableLiveData<Long> heapSpaceTotal = new MutableLiveData<>();
+    public static MutableLiveData<Long> heapSpaceFree = new MutableLiveData<>();
 
     
-    public static MutableLiveData<Map<String, Integer>> dataFromBoatController = new MutableLiveData<>(); // data provided by elec
+    public static MutableLiveData<Map<String, List<DataPoint>>> dataFromBoatController = new MutableLiveData<>(); // data provided by elec
 
             
 }

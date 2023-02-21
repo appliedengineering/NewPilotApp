@@ -6,6 +6,7 @@ package newpilotapp.drivers;
 
 import newpilotapp.data.DataManager;
 import newpilotapp.drivers.SerialDriver.SerialData;
+import newpilotapp.logging.Console;
 
 /**
  *
@@ -18,12 +19,12 @@ public class Sector2bDriver { // for sector2b, labeled on the diagram in the sof
     
     private CompassData compassData = new CompassData();
     
-    private static final byte[] COMPASS_COMMAND_BYTES = new byte[] {76};
+    private static final byte[] COMPASS_COMMAND_BYTES = new byte[] {67};
 
     public Sector2bDriver() {
         sector2bSerial = new SerialDriver();
-        sector2bSerial.setReadTimeout(10);
-        sector2bSerial.setSerialPortName("1-1.2"); // port location
+        sector2bSerial.setReadTimeout(50);
+        sector2bSerial.setSerialPortName("/dev/cu.usbmodem1201"); // port location
     }
     
     public void init(){
@@ -48,7 +49,6 @@ public class Sector2bDriver { // for sector2b, labeled on the diagram in the sof
 
         } catch (Exception e) {
             // corrupted data
-            // Console.warn("Corrupted compass data");
             DataManager.compassHeading.setValue(null);
 
             

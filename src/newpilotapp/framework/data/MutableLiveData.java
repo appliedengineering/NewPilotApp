@@ -41,6 +41,10 @@ public class MutableLiveData<T> {
             o.update(data);
         }
     }
+
+    public void valueWasUpdated() {
+        callback();
+    }
     
     
 }
