@@ -7,25 +7,33 @@ package newpilotapp.gui.components.chart;
 import external.org.thingml.rtcharts.swing.BarGraphPanel;
 import external.org.thingml.rtcharts.swing.GraphBuffer;
 import external.org.thingml.rtcharts.swing.GraphPanel;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
  *
  * @author jeffrey
  */
-public class LineChartPanel extends JPanel{
+public class LineChartPanel extends JPanel {
     
     private GraphBuffer graphBuffer = new GraphBuffer(500);
     private GraphPanel graphPanel;
+    
+    private JLabel titleLabel;
 
 
     
-    private LineChartPanel(String title) {
+    public LineChartPanel(String title) {
         graphPanel = new BarGraphPanel(graphBuffer, title, -100, 100, 25, Color.RED);
-//        this.getChart().getStyler()
-//                .setAntiAlias(true);
+        titleLabel = new JLabel();
         
+        titleLabel.setText(title);
+        
+        this.setLayout(new BorderLayout());
+        this.add(graphPanel, BorderLayout.CENTER);
+        this.add(titleLabel, BorderLayout.NORTH);
     }
     
     

@@ -12,7 +12,7 @@ import newpilotapp.logging.Console;
  * Acts as the *SERVER*
  * @author Jeffrey
  */
-public class AlignmentNetworkingDriver implements Runnable {
+public class BoatNetworkingDriver implements Runnable {
     
     // predefined connection settings
     public static final int PORT = 5555;
@@ -23,7 +23,7 @@ public class AlignmentNetworkingDriver implements Runnable {
     
     private Thread alignmentThread;
 
-    public AlignmentNetworkingDriver() {
+    public BoatNetworkingDriver() {
         
     }
 

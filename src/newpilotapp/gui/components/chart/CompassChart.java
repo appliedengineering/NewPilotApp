@@ -6,9 +6,11 @@ package newpilotapp.gui.components.chart;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,11 +27,26 @@ public class CompassChart extends JPanel {
     private String title = "Chart";
     private boolean hasData = false;
     
+    private Dimension preferredSize;
+    
     public CompassChart(String titleNew) {
         this.title = titleNew;
         this.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(), title, TitledBorder.LEFT, TitledBorder.TOP));
     }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return this.preferredSize == null ? super.getPreferredSize() : preferredSize;
+    }
+
+    @Override
+    public void setPreferredSize(Dimension preferredSize) {
+        super.setPreferredSize(preferredSize);
+        this.preferredSize = preferredSize;
+    }
+    
+    
     
     
 
@@ -38,6 +55,14 @@ public class CompassChart extends JPanel {
         super.paintComponent(g);
         
         Graphics2D g2 = (Graphics2D) g;
+        
+        RenderingHints rh = new RenderingHints(
+             RenderingHints.KEY_ANTIALIASING,
+             RenderingHints.VALUE_ANTIALIAS_ON);
+        RenderingHints rh1 = new RenderingHints(
+             RenderingHints.KEY_RENDERING,
+             RenderingHints.VALUE_RENDER_SPEED);
+        g2.setRenderingHints(rh);
         
         Insets border = this.getInsets();
         
@@ -63,10 +88,12 @@ public class CompassChart extends JPanel {
         g2.setColor(Color.BLACK);
         
         
+        double drawAngle = angle-90; // bearing
+        
         g2.drawLine(getWidth()/2, 
                 getHeight()/2, 
-                (int) (getWidth()/2+width/2*Math.cos(angle/180*Math.PI)), 
-                (int) (getHeight()/2+width/2*Math.sin(angle/180*Math.PI)));
+                (int) (getWidth()/2+width/2*Math.cos(drawAngle/180*Math.PI)), 
+                (int) (getHeight()/2+width/2*Math.sin(drawAngle/180*Math.PI)));
         g2.drawArc(widthPadding, heightPadding, width, width, 0, 360);
         // Console.log("REPAINT " + System.currentTimeMillis());
 
@@ -81,7 +108,6 @@ public class CompassChart extends JPanel {
     public void setAngle(double angle) {
         this.angle = angle;
         this.repaint();
-        //label.setText(String.valueOf(angle));
     }
 
     public boolean isHasData() {

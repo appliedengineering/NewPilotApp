@@ -26,8 +26,7 @@ public class TabbedContentPane extends JTabbedPane {
         contentPanes.add(panel);
         this.addTab(panel.title, null, panel, panel.title);
     }
-    
-    
+
     public static class ContentPane extends JPanel{
         public String title;
         

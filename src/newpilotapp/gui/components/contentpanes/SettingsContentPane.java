@@ -4,13 +4,14 @@
  */
 package newpilotapp.gui.components.contentpanes;
 
-import newpilotapp.gui.components.chart.CompassChart;
+import newpilotapp.gui.TabbedContentPane.ContentPane;
 
 /**
  *
  * @author jeffrey
  */
-public class AlignmentContentPane {
-    CompassChart compassChart;
+public class SettingsContentPane extends ContentPane {
 
+    
+    
 }

@@ -4,7 +4,7 @@
  */
 package newpilotapp.drivers;
 
-import newpilotapp.data.DataManager;
+import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.SerialDriver.SerialData;
 import newpilotapp.logging.Console;
 
@@ -12,7 +12,7 @@ import newpilotapp.logging.Console;
  *
  * @author Jeffrey
  */
-public class Sector2bDriver { // for sector2b, labeled on the diagram in the software folder
+public class CompassDriver { // for sector2b, labeled on the diagram in the software folder
     
     
     SerialDriver sector2bSerial = new SerialDriver();
@@ -21,10 +21,10 @@ public class Sector2bDriver { // for sector2b, labeled on the diagram in the sof
     
     private static final byte[] COMPASS_COMMAND_BYTES = new byte[] {67};
 
-    public Sector2bDriver() {
+    public CompassDriver() {
         sector2bSerial = new SerialDriver();
         sector2bSerial.setReadTimeout(50);
-        sector2bSerial.setSerialPortName("/dev/cu.usbmodem1201"); // port location
+        sector2bSerial.setSerialPortName("1-1.4"); // port location
     }
     
     public void init(){
@@ -45,13 +45,11 @@ public class Sector2bDriver { // for sector2b, labeled on the diagram in the sof
             compassData.systemCalibration = Integer.parseInt(tokens[1]);
             compassData.magneticCalibration = Integer.parseInt(tokens[2]);
             
-            DataManager.compassHeading.setValue(compassData);
+            BoatDataManager.compassHeading.setValue(compassData);
 
         } catch (Exception e) {
             // corrupted data
-            DataManager.compassHeading.setValue(null);
-
-            
+            BoatDataManager.compassHeading.setValue(null);
         }
     }
     

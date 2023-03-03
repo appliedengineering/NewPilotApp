@@ -2,25 +2,17 @@ package newpilotapp.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import newpilotapp.gui.TabbedContentPane.ContentPane;
 import newpilotapp.gui.components.StatusBar;
+import newpilotapp.gui.components.contentpanes.DataContentPane;
 import newpilotapp.gui.components.contentpanes.DebugContentPane;
+import newpilotapp.gui.components.contentpanes.SettingsContentPane;
 import newpilotapp.gui.components.contentpanes.TelemetryContentPane;
 
 
@@ -36,12 +28,14 @@ import newpilotapp.gui.components.contentpanes.TelemetryContentPane;
 public class AppWindow  {
     private double compassReading = 0;
     private JFrame frame;
-    private TabbedContentPane content;
+    private TabbedContentPane tabbedPane;
     static GraphicsDevice device = GraphicsEnvironment
         .getLocalGraphicsEnvironment().getScreenDevices()[0];
     
     private DebugContentPane debugPane;
-    private TelemetryContentPane telemetry;
+    private TelemetryContentPane telemetryPane;
+    private DataContentPane dataPane;
+    private SettingsContentPane settingsPane;
 
     
     
@@ -58,33 +52,43 @@ public class AppWindow  {
         frame.setUndecorated(true);
 
         
-        content = new TabbedContentPane();
+        tabbedPane = new TabbedContentPane();
+        
         debugPane = new DebugContentPane();
-        content.addPane(debugPane);
+        tabbedPane.addPane(debugPane);
         
-        telemetry = new TelemetryContentPane();
-        telemetry.title = "Telemetry Pane";
-        content.addPane(telemetry);
+        telemetryPane = new TelemetryContentPane();
+        telemetryPane.title = "Telemetry Pane";
+        tabbedPane.addPane(telemetryPane);
         
-        frame.add(content, BorderLayout.CENTER);
+        dataPane = new DataContentPane();
+        dataPane.title = "Realtime Data";
+        tabbedPane.addPane(dataPane);
+        
+        settingsPane = new SettingsContentPane();
+        settingsPane.title = "Settings";
+        tabbedPane.addPane(settingsPane);
+
+        
+        frame.add(tabbedPane, BorderLayout.CENTER);
 
         frame.add(new StatusBar(), BorderLayout.SOUTH);
         
         frame.getContentPane().setBackground(Color.white);
         frame.setVisible(true);
         
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-              int confirmed = JOptionPane.showConfirmDialog(null, 
-                  "Are you sure you want to exit the program?", "Applied Engineering 2023",
-                  JOptionPane.YES_NO_OPTION);
-
-              if (confirmed == JOptionPane.YES_OPTION) {
-                frame.dispose();
-                System.exit(0);
-              }
-            }
-          });
+//        frame.addWindowListener(new WindowAdapter() {
+//            public void windowClosing(WindowEvent e) {
+//              int confirmed = JOptionPane.showConfirmDialog(null, 
+//                  "Are you sure you want to exit the program?", "Applied Engineering 2023",
+//                  JOptionPane.YES_NO_OPTION);
+//
+//              if (confirmed == JOptionPane.YES_OPTION) {
+//                frame.dispose();
+//                System.exit(0);
+//              }
+//            }
+//          });
         
         device.setFullScreenWindow(frame);
 

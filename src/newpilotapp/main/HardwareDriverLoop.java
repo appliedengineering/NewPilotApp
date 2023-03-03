@@ -4,8 +4,9 @@
  */
 package newpilotapp.main;
 
-import newpilotapp.drivers.Sector2aDriver;
-import newpilotapp.drivers.Sector2bDriver;
+import newpilotapp.drivers.GpsDriver;
+import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.StepperDriver;
 import newpilotapp.logging.Console;
 
 /**
@@ -14,18 +15,23 @@ import newpilotapp.logging.Console;
  */
 public class HardwareDriverLoop implements Runnable {
     
-    private Sector2bDriver sector2bDriver = new Sector2bDriver();
+    private CompassDriver compassDriver = new CompassDriver();
 
-    private Sector2aDriver sector2aDriver = new Sector2aDriver();
+    private GpsDriver gpsDriver = new GpsDriver();
+    
+    private StepperDriver stepperDriver = new StepperDriver();
+
 
     
     public volatile boolean isRunning = false;
     
     public volatile long runDelay = 5;
-    
+        
     private void init() {
         try {
-        sector2bDriver.init();
+        compassDriver.init();
+        gpsDriver.init();
+        stepperDriver.init();
         // sector2aDriver.init();
 
         } catch (Exception e) {
@@ -37,22 +43,27 @@ public class HardwareDriverLoop implements Runnable {
     @Override
     public void run() {
         
-            init();
-            isRunning = true;
-            while(isRunning){
-                try {
-                    sector2bDriver.recieveData();                    
-                    
-                    //sector2aDriver.recieveData();    
-                    //sector2aDriver.sendData();    
-                                        
-                } catch (Exception e) {
-                    // make error visible on display (bc hardware issues need to be resolved physically)
-                    Console.error(e.getMessage());
+        long gpsLastRead = System.currentTimeMillis();
+        
+        init();
+        isRunning = true;
+        while(isRunning){
+            try {
+                compassDriver.recieveData();     
+                if(System.currentTimeMillis()-gpsLastRead > 1000) { // read gps values every second
+                    gpsDriver.recieveData();
+                    gpsLastRead = System.currentTimeMillis();
                 }
+                stepperDriver.sendData(); // stepper motor updates itself based on current conditions
+                //sector2aDriver.sendData();    
 
-                try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}
+            } catch (Exception e) {
+                // make error visible on display (bc hardware issues need to be resolved physically)
+                Console.error(e.getMessage());
             }
+
+            try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}
+        }
         
        
     }
@@ -62,7 +73,7 @@ public class HardwareDriverLoop implements Runnable {
     }
 
     public void stopAllRunningTasks() {
-        sector2bDriver.stop();
+        compassDriver.stop();
     }
     
     

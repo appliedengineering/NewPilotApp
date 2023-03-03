@@ -4,9 +4,9 @@
  */
 package newpilotapp.main;
 
-import newpilotapp.data.DataManager;
-import newpilotapp.drivers.Sector2aDriver;
-import newpilotapp.drivers.Sector2bDriver;
+import newpilotapp.data.BoatDataManager;
+import newpilotapp.drivers.GpsDriver;
+import newpilotapp.drivers.CompassDriver;
 import newpilotapp.logging.Console;
 
 /**
@@ -35,8 +35,8 @@ public class LowRefreshDriverLoop implements Runnable {
                     long heapSize = Runtime.getRuntime().totalMemory()/1_000_000; 
                     long heapFreeSize = Runtime.getRuntime().freeMemory()/1_000_000; 
                     
-                    DataManager.heapSpaceTotal.setValue(heapSize);
-                    DataManager.heapSpaceFree.setValue(heapFreeSize);
+                    BoatDataManager.heapSpaceTotal.setValue(heapSize);
+                    BoatDataManager.heapSpaceFree.setValue(heapFreeSize);
 
                     
                 } catch (Exception e) {
