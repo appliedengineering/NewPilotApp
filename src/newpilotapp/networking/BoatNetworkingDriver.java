@@ -4,7 +4,16 @@
  */
 package newpilotapp.networking;
 
+import external.org.msgpack.core.MessagePack;
+import external.org.msgpack.core.MessagePacker;
+import external.org.msgpack.core.MessageUnpacker;
 import external.org.zeromq.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import newpilotapp.data.BoatDataManager;
+import newpilotapp.drivers.GpsCalc;
+import newpilotapp.drivers.GpsDriver;
+import newpilotapp.ground.data.GroundDataManager;
 import newpilotapp.logging.Console;
 
 /**
@@ -51,25 +60,72 @@ public class BoatNetworkingDriver implements Runnable {
             alignSocket.bind("tcp://*:" + PORT);
             
             while (isRunning) {
-                String request = alignSocket.recvStr();
+                byte[] request = alignSocket.recv();
            
                 // TODO: get the data and send
                 
-                Console.log("Got data: " + request);
+                Console.log("Got data: " + request.length);
                 
                 // set
-                // TODO: DataManager.remoteGpsData = parse();
+                BoatDataManager.remoteGpsData.setValue(parseReply(request));
 
                 // TODO: calc angle and set to DataManager.telemetryHeading
                 // currently just echo server for testing
                 
+                GpsDriver.GpsData remote = BoatDataManager.remoteGpsData.getValue();
+                GpsDriver.GpsData local = BoatDataManager.localGpsData.getValue();
+                BoatDataManager.telemetryHeading.setValue(GpsCalc.findHeadingOffset(remote, local));
+
+                
                 // TODO: send DataManager.localGpsData.getValue();
-                alignSocket.send(request);
+                alignSocket.send(getDataToSend());
             }
         } catch (Exception e) {
             Console.error(e.toString());
         }
        
+    }
+    
+    
+    private GpsDriver.GpsData parseReply(byte[] reply) {
+        try{
+            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(reply);
+            double lat = unpacker.unpackDouble();
+            double lon = unpacker.unpackDouble();
+        }catch(IOException e) {
+            Console.error("Failed to unpack alignment data");
+        }
+
+    }
+    
+    /**
+     * Data (command) that is to be sent to boatstation
+     * @return 
+     */
+
+    private byte[] getDataToSend() {
+        try{
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            MessagePacker packer = MessagePack.newDefaultPacker(out);
+
+            GpsDriver.GpsData gps = BoatDataManager.localGpsData.getValue();
+
+            // pack map (key -> value) elements
+            // packer.packMapHeader(2); // the number of (key, value) pairs
+
+            // packer.packString("la"); 
+            packer.packDouble(gps.lat); // latitude
+
+            // packer.packString("lo"); 
+            packer.packDouble(gps.lon); // longitude
+            
+            packer.close();
+            
+            return out.toByteArray();
+
+        } catch (IOException e) {
+            return new byte[]{}; // empty array
+        }
     }
     
 }

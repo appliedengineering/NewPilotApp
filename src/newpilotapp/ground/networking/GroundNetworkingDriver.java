@@ -4,9 +4,16 @@
  */
 package newpilotapp.ground.networking;
 
+import external.org.msgpack.core.MessagePack;
+import external.org.msgpack.core.MessagePacker;
 import external.org.zeromq.SocketType;
 import external.org.zeromq.ZContext;
 import external.org.zeromq.ZMQ;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import newpilotapp.data.BoatDataManager;
+import newpilotapp.ground.data.GroundDataManager;
+import newpilotapp.drivers.GpsDriver;
 
 /**
  *  Check this:
@@ -32,7 +39,8 @@ public class GroundNetworkingDriver implements Runnable {
             int retriesLeft = REQUEST_RETRIES;
             while (retriesLeft > 0 && !Thread.currentThread().isInterrupted()) {
                 // FINISH
-                String request = String.format("%d", ++sequence);
+                byte[] request = getDataToSend();
+                if(request.length == 0) continue;
                 client.send(request);
 
                 int expect_reply = 1;
@@ -47,6 +55,9 @@ public class GroundNetworkingDriver implements Runnable {
                         //  We got a reply from the server, must match
                         //  getSequence
                         byte[] reply = client.recv();
+                        
+                        parseReply(reply);
+
                         if (reply == null)
                             break; //  Interrupted
                         boolean success = parseReply(reply);
@@ -82,7 +93,42 @@ public class GroundNetworkingDriver implements Runnable {
      * @return true if valid data, false if corrupted
      */
     private boolean parseReply(byte[] reply) {
+        
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    /**
+     * Data (command) that is to be sent to boatstation
+     * @return 
+     */
+
+    private byte[] getDataToSend() {
+        try{
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            MessagePacker packer = MessagePack.newDefaultPacker(out);
+
+            GpsDriver.GpsData gps = GroundDataManager.localGpsData.getValue();
+
+
+
+            // pack map (key -> value) elements
+            packer.packMapHeader(2); // the number of (key, value) pairs
+
+            packer.packString("la"); // latitude
+            packer.packDouble(gps.lat);
+
+            packer.packString("lo"); // longitude
+            packer.packDouble(gps.lon);
+            
+            packer.close();
+            
+            return out.toByteArray();
+
+        } catch (IOException e) {
+            return new byte[]{}; // empty array
+        }
+
+
     }
     
 }
