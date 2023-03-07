@@ -7,6 +7,8 @@ package newpilotapp.gui.components.contentpanes;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,7 +31,8 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
     private CompassChart targetHeadingChart;
     private TelemetryMap telemetryMap;
     
-    private JLabel gpsData;
+    private JLabel gpsLocalData;
+    private JLabel gpsRemoteData;
     
 
     
@@ -50,7 +53,9 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         JPanel main = new JPanel();
         main.setLayout(new BorderLayout());
         
-        gpsData = new JLabel();
+        gpsLocalData = new JLabel();
+        gpsRemoteData = new JLabel();
+
         
         // testing
         
@@ -58,7 +63,14 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         main.add(compassHeadingChart, BorderLayout.WEST);
         main.add(targetHeadingChart, BorderLayout.EAST);
         main.add(telemetryMap, BorderLayout.CENTER);
-        main.add(gpsData, BorderLayout.NORTH);
+        
+        JPanel gpsPanel = new JPanel();
+        gpsPanel.setLayout(new BoxLayout(gpsPanel, BoxLayout.X_AXIS));
+        gpsPanel.add(gpsLocalData);
+        gpsPanel.add(Box.createHorizontalGlue());
+        gpsPanel.add(gpsRemoteData);
+
+        main.add(gpsPanel, BorderLayout.NORTH);
 
         this.add(main, BorderLayout.CENTER);
 
@@ -97,14 +109,14 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
             
         });
         
-        BoatDataManager.telemetryHeading.observe(new LiveDataObserver<CompassDriver.CompassData> () {
+        BoatDataManager.telemetryHeading.observe(new LiveDataObserver<Double> () {
             @Override
-            public void update(CompassDriver.CompassData data) {
+            public void update(Double data) {
                 if(data == null) {
                     targetHeadingChart.setHasData(false);
                 } else {
                     targetHeadingChart.setHasData(true);
-                    targetHeadingChart.setAngle(data.compassHeading);
+                    targetHeadingChart.setAngle(data);
                 }
             }
             
@@ -114,10 +126,22 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
             @Override
             public void update(GpsDriver.GpsData data) {
                 if(data == null) {
-                    gpsData.setText("GPS LOCAL: disconnected");
+                    gpsLocalData.setText("GPS LOCAL: disconnected");
                     return;
                 }
-                gpsData.setText(String.format("GPS LOCAL: ( %.6f , %.6f ) SPEED: %.3f", data.lat, data.lon, data.speed));
+                gpsLocalData.setText(String.format("GPS LOCAL: ( %.6f , %.6f ) SPEED: %.3f", data.lat, data.lon, data.speed));
+            }
+            
+        });
+        
+        BoatDataManager.remoteGpsData.observe(new LiveDataObserver<GpsDriver.GpsData> () {
+            @Override
+            public void update(GpsDriver.GpsData data) {
+                if(data == null) {
+                    gpsRemoteData.setText("GPS REMOTE: disconnected");
+                    return;
+                }
+                gpsRemoteData.setText(String.format("GPS REMOTE: ( %.6f , %.6f ) SPEED: %.3f", data.lat, data.lon, data.speed));
             }
             
         });

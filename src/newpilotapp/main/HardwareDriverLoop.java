@@ -4,6 +4,7 @@
  */
 package newpilotapp.main;
 
+import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.drivers.CompassDriver;
 import newpilotapp.drivers.StepperDriver;
@@ -54,7 +55,7 @@ public class HardwareDriverLoop implements Runnable {
                     gpsDriver.recieveData();
                     gpsLastRead = System.currentTimeMillis();
                 }
-                stepperDriver.sendData(); // stepper motor updates itself based on current conditions
+                stepperDriver.sendData(BoatDataManager.telemetryHeading.getValue()); // stepper motor updates itself based on current conditions
                 //sector2aDriver.sendData();    
 
             } catch (Exception e) {

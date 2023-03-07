@@ -18,6 +18,8 @@ public class GroundDataManager {
     public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>();
     public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>();
     public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(); 
+    public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
+
 
 
 

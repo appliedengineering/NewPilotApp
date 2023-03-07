@@ -31,7 +31,7 @@ public class BoatDataManager {
     
     public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.12414384566719, -118.07275692865537, 0)); // testing
     
-    public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>();
+    public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
 
     public static MutableLiveData<Map<String, List<DataPoint>>> dataFromBoatController = new MutableLiveData<>(new HashMap<>()); // data provided by elec
 

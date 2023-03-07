@@ -6,6 +6,7 @@ package newpilotapp.ground.networking;
 
 import external.org.msgpack.core.MessagePack;
 import external.org.msgpack.core.MessagePacker;
+import external.org.msgpack.core.MessageUnpacker;
 import external.org.zeromq.SocketType;
 import external.org.zeromq.ZContext;
 import external.org.zeromq.ZMQ;
@@ -14,12 +15,13 @@ import java.io.IOException;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.ground.data.GroundDataManager;
 import newpilotapp.drivers.GpsDriver;
+import newpilotapp.logging.Console;
 
 /**
  *  Check this:
  * https://zguide.zeromq.org/docs/chapter4/#Client-Side-Reliability-Lazy-Pirate-Pattern
  */
-public class GroundNetworkingDriver implements Runnable {
+public class GroundAlignmentNetworkingDriver implements Runnable {
     
     private final static int    REQUEST_TIMEOUT = 1000;                  //  msecs
     private final static int    REQUEST_RETRIES = Integer.MAX_VALUE;     //  retry infinitely
@@ -93,8 +95,20 @@ public class GroundNetworkingDriver implements Runnable {
      * @return true if valid data, false if corrupted
      */
     private boolean parseReply(byte[] reply) {
+        GpsDriver.GpsData data = GroundDataManager.remoteGpsData.getValue();
+        try{
+            MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(reply);
+            double lat = unpacker.unpackDouble();
+            double lon = unpacker.unpackDouble();
+            data.lat = lat;
+            data.lon = lon;
+            GroundDataManager.remoteGpsData.setValue(data);
+        }catch(IOException e) {
+            Console.error("Failed to unpack alignment data");
+            return false;
+        }
         
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return true;
     }
     
     /**

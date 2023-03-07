@@ -21,7 +21,7 @@ import newpilotapp.logging.Console;
  * Acts as the *SERVER*
  * @author Jeffrey
  */
-public class BoatNetworkingDriver implements Runnable {
+public class BoatAlignmentNetworkingDriver implements Runnable {
     
     // predefined connection settings
     public static final int PORT = 5555;
@@ -32,7 +32,7 @@ public class BoatNetworkingDriver implements Runnable {
     
     private Thread alignmentThread;
 
-    public BoatNetworkingDriver() {
+    public BoatAlignmentNetworkingDriver() {
         
     }
 
@@ -68,16 +68,12 @@ public class BoatNetworkingDriver implements Runnable {
                 
                 // set
                 BoatDataManager.remoteGpsData.setValue(parseReply(request));
-
-                // TODO: calc angle and set to DataManager.telemetryHeading
-                // currently just echo server for testing
                 
                 GpsDriver.GpsData remote = BoatDataManager.remoteGpsData.getValue();
                 GpsDriver.GpsData local = BoatDataManager.localGpsData.getValue();
                 BoatDataManager.telemetryHeading.setValue(GpsCalc.findHeadingOffset(remote, local));
 
                 
-                // TODO: send DataManager.localGpsData.getValue();
                 alignSocket.send(getDataToSend());
             }
         } catch (Exception e) {
@@ -88,13 +84,18 @@ public class BoatNetworkingDriver implements Runnable {
     
     
     private GpsDriver.GpsData parseReply(byte[] reply) {
+        GpsDriver.GpsData data = new GpsDriver.GpsData();
         try{
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(reply);
             double lat = unpacker.unpackDouble();
             double lon = unpacker.unpackDouble();
+            data.lat = lat;
+            data.lon = lon;
         }catch(IOException e) {
             Console.error("Failed to unpack alignment data");
         }
+        
+        return data;
 
     }
     

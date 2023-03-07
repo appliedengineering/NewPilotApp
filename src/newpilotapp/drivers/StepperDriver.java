@@ -38,36 +38,9 @@ public class StepperDriver { // part of Sector2a
         stepperSerial.stop();
     }
     
-    public void sendData() {
+    public void sendData(double difference) {
         try{
-            // calculate bearing
-            
-            GpsData remote = BoatDataManager.remoteGpsData.getValue();
-            GpsData local = BoatDataManager.localGpsData.getValue();
-            
-            if(remote == null || local == null) return;
-            if(BoatDataManager.compassHeading.getValue() == null) return;
-
-            double deltaLat = remote.lat - local.lat;
-            double deltaLon = remote.lon - local.lon;
-            
-            double bearing = Math.atan2(
-                    Math.cos(remote.lat) * Math.sin(deltaLon),
-                    Math.cos(local.lat) * Math.sin(remote.lat) - Math.sin(local.lat) * Math.cos(remote.lat) * Math.cos(deltaLon));
-
-            bearing = -bearing/Math.PI*180;
-            
-            
-            if(bearing < 0) {
-                bearing = 360 + bearing;
-            }
-            
-            BoatDataManager.telemetryHeading.getValue().compassHeading = bearing;
-            BoatDataManager.telemetryHeading.valueWasUpdated();
-            
-            int difference = (int) (bearing - BoatDataManager.compassHeading.getValue().compassHeading);
-//            Console.log(String.format("diff: %d bearing: %f", difference, bearing));
-            
+                        
             if(Math.abs(difference) < 5) {
                 return;
             }

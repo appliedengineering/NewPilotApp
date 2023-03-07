@@ -10,7 +10,7 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import newpilotapp.gui.AppWindow;
-import newpilotapp.networking.BoatNetworkingDriver;
+import newpilotapp.networking.BoatAlignmentNetworkingDriver;
 
 /**
  *
@@ -18,7 +18,7 @@ import newpilotapp.networking.BoatNetworkingDriver;
  */
 public class AppLauncher {
     public static AppWindow appWindow;
-    public static BoatNetworkingDriver alignmentNetworking;
+    public static BoatAlignmentNetworkingDriver alignmentNetworking;
     
     public static HardwareDriverLoop hardwareLoop;
     public static LowRefreshDriverLoop lowRefreshLoop;
@@ -45,7 +45,7 @@ public class AppLauncher {
         lowRefreshThread = new Thread(lowRefreshLoop);
         lowRefreshThread.start();
         
-        alignmentNetworking = new BoatNetworkingDriver();
+        alignmentNetworking = new BoatAlignmentNetworkingDriver();
         alignmentNetworking.start();
         
         try {

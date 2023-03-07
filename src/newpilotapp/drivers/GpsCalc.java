@@ -30,8 +30,6 @@ public class GpsCalc {
             bearing = 360 + bearing;
         }
 
-        BoatDataManager.telemetryHeading.getValue().compassHeading = bearing;
-        BoatDataManager.telemetryHeading.valueWasUpdated();
 
         int difference = (int) (bearing - BoatDataManager.compassHeading.getValue().compassHeading);
         return difference;
