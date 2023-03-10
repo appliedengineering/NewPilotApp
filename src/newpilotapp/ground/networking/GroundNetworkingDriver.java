@@ -16,33 +16,39 @@ import newpilotapp.data.BoatDataManager;
 import newpilotapp.ground.data.GroundDataManager;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.logging.Console;
+import newpilotapp.networking.BoatNetworkingDriver;
 
 /**
  *  Check this:
  * https://zguide.zeromq.org/docs/chapter4/#Client-Side-Reliability-Lazy-Pirate-Pattern
  */
-public class GroundAlignmentNetworkingDriver implements Runnable {
+public class GroundNetworkingDriver implements Runnable {
     
     private final static int    REQUEST_TIMEOUT = 1000;                  //  msecs
-    private final static int    REQUEST_RETRIES = Integer.MAX_VALUE;     //  retry infinitely
-    private final static String SERVER_ENDPOINT = "tcp://localhost:5555";
+    private final static int    REQUEST_RETRIES = 10; // Integer.MAX_VALUE;     //  retry infinitely
+    private final static String SERVER_ENDPOINT = "tcp://192.168.1.232:5555";
+    
+    public volatile long runDelay = 10;
+
 
     @Override
     public void run() {
+        int count = 0;
         try (ZContext ctx = new ZContext()) {
             ZMQ.Socket client = ctx.createSocket(SocketType.REQ);
             assert (client != null);
+            client.setIPv6(true);
             client.connect(SERVER_ENDPOINT);
             
             ZMQ.Poller poller = ctx.createPoller(1);
             poller.register(client, ZMQ.Poller.POLLIN);
             
-            int sequence = 0;
             int retriesLeft = REQUEST_RETRIES;
             while (retriesLeft > 0 && !Thread.currentThread().isInterrupted()) {
                 // FINISH
                 byte[] request = getDataToSend();
                 if(request.length == 0) continue;
+                long start = System.currentTimeMillis();
                 client.send(request);
 
                 int expect_reply = 1;
@@ -54,8 +60,7 @@ public class GroundAlignmentNetworkingDriver implements Runnable {
 
 
                     if (poller.pollin(0)) {
-                        //  We got a reply from the server, must match
-                        //  getSequence
+                        //  We got a reply from the server
                         byte[] reply = client.recv();
                         
                         parseReply(reply);
@@ -64,6 +69,9 @@ public class GroundAlignmentNetworkingDriver implements Runnable {
                             break; //  Interrupted
                         boolean success = parseReply(reply);
                         if (success) {
+                            count++;
+                            // System.out.println("Success! " + count);
+                            System.out.println(System.currentTimeMillis()-start);
                             retriesLeft = REQUEST_RETRIES;
                             expect_reply = 0;
                         }
@@ -84,6 +92,8 @@ public class GroundAlignmentNetworkingDriver implements Runnable {
                         client.send(request);
                     }
                 }
+                
+                try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}
             }
         }
     }
@@ -96,6 +106,9 @@ public class GroundAlignmentNetworkingDriver implements Runnable {
      */
     private boolean parseReply(byte[] reply) {
         GpsDriver.GpsData data = GroundDataManager.remoteGpsData.getValue();
+        if(data == null) {
+            data = new GpsDriver.GpsData();
+        }
         try{
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(reply);
             double lat = unpacker.unpackDouble();
@@ -104,7 +117,7 @@ public class GroundAlignmentNetworkingDriver implements Runnable {
             data.lon = lon;
             GroundDataManager.remoteGpsData.setValue(data);
         }catch(IOException e) {
-            Console.error("Failed to unpack alignment data");
+            e.printStackTrace();
             return false;
         }
         
@@ -119,20 +132,21 @@ public class GroundAlignmentNetworkingDriver implements Runnable {
     private byte[] getDataToSend() {
         try{
             ByteArrayOutputStream out = new ByteArrayOutputStream();
+            
+            out.write(BoatNetworkingDriver.REQUEST_ALIGNMENT);
+            
             MessagePacker packer = MessagePack.newDefaultPacker(out);
 
             GpsDriver.GpsData gps = GroundDataManager.localGpsData.getValue();
 
-
-
             // pack map (key -> value) elements
-            packer.packMapHeader(2); // the number of (key, value) pairs
+            // packer.packMapHeader(2); // the number of (key, value) pairs
 
-            packer.packString("la"); // latitude
-            packer.packDouble(gps.lat);
+            // packer.packString("la"); // latitude
+            packer.packDouble(Math.random());
 
-            packer.packString("lo"); // longitude
-            packer.packDouble(gps.lon);
+            // packer.packString("lo"); // longitude
+            packer.packDouble(Math.random());
             
             packer.close();
             

@@ -4,6 +4,13 @@
  */
 package newpilotapp.ground;
 
+import newpilotapp.data.BoatDataManager;
+import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.GpsDriver;
+import newpilotapp.drivers.StepperDriver;
+import newpilotapp.ground.data.GroundDataManager;
+import newpilotapp.logging.Console;
+
 /**
  *
  * @author jeffrey
@@ -12,15 +19,50 @@ public class GroundMain implements Runnable {
     
     public volatile boolean isRunning = false;
     
-    public void init() {
-        
+    private CompassDriver compassDriver = new CompassDriver(GroundDataManager.compassHeading);
+
+    private GpsDriver gpsDriver = new GpsDriver(GroundDataManager.localGpsData);
+    
+    private StepperDriver stepperDriver = new StepperDriver();
+    
+    public volatile long runDelay = 5;
+
+    
+    private void init() {
+        try {
+        compassDriver.init();
+        gpsDriver.init();
+        stepperDriver.init();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
+        
+        long gpsLastRead = System.currentTimeMillis();
+
+        init();
+        
         isRunning = true;
         while(isRunning) {
-        
+            try {
+                compassDriver.recieveData();     
+                if(System.currentTimeMillis()-gpsLastRead > 1000) { // read gps values every second
+                    gpsDriver.recieveData();
+                    gpsLastRead = System.currentTimeMillis();
+                }
+                stepperDriver.sendData(BoatDataManager.telemetryHeading.getValue()); // stepper motor updates itself based on current conditions
+                //sector2aDriver.sendData();    
+
+            } catch (Exception e) {
+                // make error visible on display (bc hardware issues need to be resolved physically)
+                e.printStackTrace();
+            }
+
+            try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}
         }
     }
     

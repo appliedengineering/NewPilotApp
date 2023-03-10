@@ -6,6 +6,7 @@ package newpilotapp.drivers;
 
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.SerialDriver.SerialData;
+import newpilotapp.framework.data.MutableLiveData;
 import newpilotapp.logging.Console;
 
 /**
@@ -20,8 +21,11 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
     private CompassData compassData = new CompassData();
     
     private static final byte[] COMPASS_COMMAND_BYTES = new byte[] {67};
+    
+    private MutableLiveData<CompassData> compassHeading;
 
-    public CompassDriver() {
+    public CompassDriver(MutableLiveData<CompassData> compassHeading) {
+        this.compassHeading = compassHeading;
         sector2bSerial = new SerialDriver();
         sector2bSerial.setReadTimeout(50);
         sector2bSerial.setSerialPortName("1-1.4"); // port location
@@ -45,11 +49,11 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
             compassData.systemCalibration = Integer.parseInt(tokens[1]);
             compassData.magneticCalibration = Integer.parseInt(tokens[2]);
             
-            BoatDataManager.compassHeading.setValue(compassData);
+            compassHeading.setValue(compassData);
 
         } catch (Exception e) {
             // corrupted data
-            BoatDataManager.compassHeading.setValue(null);
+            compassHeading.setValue(null);
         }
     }
     

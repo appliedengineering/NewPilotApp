@@ -5,6 +5,7 @@
 package newpilotapp.drivers;
 
 import newpilotapp.data.BoatDataManager;
+import newpilotapp.framework.data.MutableLiveData;
 
 /**
  *
@@ -15,17 +16,19 @@ public class GpsDriver { // part of Sector2a
     private static final byte[] GPS_COMMAND_BYTES = new byte[] {71};
 
     private GpsData gpsData = new GpsData();
-
+    
+    private MutableLiveData<GpsData> localGpsData;
     
     SerialDriver gpsSerial = new SerialDriver();
 
-    public GpsDriver() {
+    public GpsDriver(MutableLiveData<GpsData> localGpsData) {
+        this.localGpsData = localGpsData;
         gpsSerial = new SerialDriver();
         gpsSerial.setReadTimeout(100);
         gpsSerial.setSerialPortName("1-1.1"); // port location
     }
     
-     public void init(){
+    public void init(){
         gpsSerial.init();
     }
     
@@ -73,10 +76,10 @@ public class GpsDriver { // part of Sector2a
             gpsData.lat = lat;
             gpsData.lon = lon;
             
-            BoatDataManager.localGpsData.setValue(gpsData);
+            localGpsData.setValue(gpsData);
             
         } catch (Exception e) {
-            
+            localGpsData.setValue(null);
         }
     }
     

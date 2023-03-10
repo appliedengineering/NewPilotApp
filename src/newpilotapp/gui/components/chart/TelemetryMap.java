@@ -4,6 +4,7 @@
  */
 package newpilotapp.gui.components.chart;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,9 +33,16 @@ public class TelemetryMap extends JComponent {
         
         Graphics2D g2 = (Graphics2D) g;
 
+        
+        
         // write the drawing code here
         g2.setColor(bgColor);
         g2.fillRect(0, 0, getWidth(), getHeight());
+        
+        g2.setStroke(new BasicStroke(10));
+        g2.setColor(Color.white);
+        g2.drawLine(0, 0, getWidth(), getHeight());
+        
     }
 
     public GpsDriver.GpsData getGpsLocal() {

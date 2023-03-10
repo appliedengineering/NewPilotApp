@@ -16,9 +16,9 @@ import newpilotapp.logging.Console;
  */
 public class HardwareDriverLoop implements Runnable {
     
-    private CompassDriver compassDriver = new CompassDriver();
+    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading);
 
-    private GpsDriver gpsDriver = new GpsDriver();
+    private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData);
     
     private StepperDriver stepperDriver = new StepperDriver();
 
@@ -50,7 +50,7 @@ public class HardwareDriverLoop implements Runnable {
         isRunning = true;
         while(isRunning){
             try {
-                compassDriver.recieveData();     
+                compassDriver.recieveData();
                 if(System.currentTimeMillis()-gpsLastRead > 1000) { // read gps values every second
                     gpsDriver.recieveData();
                     gpsLastRead = System.currentTimeMillis();

@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import newpilotapp.data.DataPoint;
 
 /**
  *
@@ -18,7 +19,7 @@ import javax.swing.JPanel;
  */
 public class LineChartPanel extends JPanel {
     
-    private GraphBuffer graphBuffer = new GraphBuffer(500);
+    private GraphBuffer graphBuffer = new GraphBuffer(50);
     private GraphPanel graphPanel;
     
     private JLabel titleLabel;
@@ -34,6 +35,18 @@ public class LineChartPanel extends JPanel {
         this.setLayout(new BorderLayout());
         this.add(graphPanel, BorderLayout.CENTER);
         this.add(titleLabel, BorderLayout.NORTH);
+    }
+    
+    public void start() {
+        graphPanel.start();
+    }
+    
+    public void stop() {
+        graphPanel.stop();
+    }
+    
+    public void addPoint(DataPoint point){
+        graphBuffer.insertData((int) (point.valueDouble * 100d));
     }
     
     

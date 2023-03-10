@@ -10,7 +10,8 @@ package newpilotapp.data;
  */
 public class DataPoint {
     public double timestamp;
-    public double value;
+    public double valueDouble;
+    public boolean valueBool;
     
     
 }

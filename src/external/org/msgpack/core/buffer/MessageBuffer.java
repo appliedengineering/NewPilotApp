@@ -50,9 +50,9 @@ public class MessageBuffer
      */
     static final int ARRAY_BYTE_BASE_OFFSET;
 
-    private static final String UNIVERSAL_MESSAGE_BUFFER = "org.msgpack.core.buffer.MessageBufferU";
-    private static final String BIGENDIAN_MESSAGE_BUFFER = "org.msgpack.core.buffer.MessageBufferBE";
-    private static final String DEFAULT_MESSAGE_BUFFER = "org.msgpack.core.buffer.MessageBuffer";
+    private static final String UNIVERSAL_MESSAGE_BUFFER = "external.org.msgpack.core.buffer.MessageBufferU";
+    private static final String BIGENDIAN_MESSAGE_BUFFER = "external.org.msgpack.core.buffer.MessageBufferBE";
+    private static final String DEFAULT_MESSAGE_BUFFER = "external.org.msgpack.core.buffer.MessageBuffer";
 
     static {
         boolean useUniversalBuffer = false;
