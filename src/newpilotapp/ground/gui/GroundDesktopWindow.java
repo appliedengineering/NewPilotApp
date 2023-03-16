@@ -6,28 +6,28 @@ package newpilotapp.ground.gui;
 
 import java.awt.HeadlessException;
 import javax.swing.JFrame;
-import newpilotapp.ground.networking.GroundTestNetworkingDriver;
+import newpilotapp.ground.networking.GroundDesktopNetworkingDriver;
 
 /**
  *
  * @author jeffrey
  */
-public class GroundAppWindow {
+public class GroundDesktopWindow {
     
     private JFrame frame;
     private GroundDataPane pane;
     
     public static void main(String[] args) {
-        GroundTestNetworkingDriver test = new GroundTestNetworkingDriver();
-        Thread networkThread = new Thread(test);
+        GroundDesktopNetworkingDriver desktopNetworking = new GroundDesktopNetworkingDriver("localhost", "5555");
+        Thread networkThread = new Thread(desktopNetworking);
         
-        new GroundAppWindow();
+        new GroundDesktopWindow();
         
         networkThread.start();
 
     }
 
-    public GroundAppWindow() {
+    public GroundDesktopWindow() {
         frame = new JFrame();
         frame.setSize(400, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

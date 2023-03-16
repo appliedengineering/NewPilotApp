@@ -8,6 +8,7 @@ import external.org.msgpack.core.MessagePack;
 import external.org.msgpack.core.MessagePacker;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,14 +31,17 @@ public class DebugDataCalc {
             for(int i = 0; i < BoatDataManager.DATA_KEYS.length; i++) {
                 List<DataPoint> points = data.get(BoatDataManager.DATA_KEYS[i]);
                 DataPoint lastPoint;
-                if(points != null && !points.isEmpty()) {
-                    lastPoint = points.get(points.size() - 1);
-                } else {
-                    lastPoint = new DataPoint();
-                    lastPoint.valueDouble = Math.random();
-                    lastPoint.valueBool = Math.random() > 0.5d;
+                if(points == null) {
+                    points = new ArrayList<>();
+                    data.put(BoatDataManager.DATA_KEYS[i], points);
                 }
                 
+                lastPoint = new DataPoint();
+                lastPoint.valueDouble = Math.random()*100d;
+                lastPoint.valueBool = Math.random() > 0.5d;
+                
+                points.add(lastPoint);
+                    
                 if(BoatDataManager.isDataKeyNumerical(BoatDataManager.DATA_KEYS[i])) {
                     packer.packFloat((float) lastPoint.valueDouble); // reduce bytes
                 } else {
@@ -48,6 +52,7 @@ public class DebugDataCalc {
             byte[] arr = out.toByteArray();
             System.out.println(arr.length);
             System.out.println(Arrays.toString(arr));
+            BoatDataManager.dataFromBoatController.valueWasUpdated();
             return arr;
         } catch (IOException e) {
             return new byte[0];

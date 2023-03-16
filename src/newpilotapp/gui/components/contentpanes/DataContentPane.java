@@ -7,12 +7,15 @@ package newpilotapp.gui.components.contentpanes;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import newpilotapp.data.BoatDataManager;
+import newpilotapp.data.DataPoint;
+import newpilotapp.framework.data.LiveDataObserver;
 import newpilotapp.gui.TabbedContentPane.ContentPane;
 import newpilotapp.gui.components.chart.LineChartPanel;
 
@@ -54,6 +57,7 @@ public class DataContentPane extends ContentPane{
                 LineChartPanel chart = new LineChartPanel(BoatDataManager.getTitleForDataKey(key));
                 chartList.put(key, chart);
                 chartDataDisplay.add(chart);
+                chart.start();
             }
         }
         
@@ -69,6 +73,33 @@ public class DataContentPane extends ContentPane{
                 booleanDataDisplay.add(Box.createHorizontalStrut(10));
             }
         }
+        
+        BoatDataManager.dataFromBoatController.observe(new LiveDataObserver<Map<String, List<DataPoint>>>() {
+            @Override
+            public void update(Map<String, List<DataPoint>> data) {
+                for(int i = 0; i < BoatDataManager.DATA_KEYS.length; i++) {
+                    String key = BoatDataManager.DATA_KEYS[i];
+                    List<DataPoint> points = data.get(key);
+                    DataPoint lastPoint;
+                    if(points != null && !points.isEmpty()) {
+                        lastPoint = points.get(points.size() - 1);
+                    } else {
+                        lastPoint = new DataPoint();
+                        lastPoint.valueDouble = 10;
+                        lastPoint.valueBool = false;
+                    }
+
+                    if(BoatDataManager.isDataKeyNumerical(BoatDataManager.DATA_KEYS[i])) {
+                        LineChartPanel chart = chartList.get(key);
+                        chart.addPoint(lastPoint);
+                    } else {
+                        JLabel label = booleanList.get(BoatDataManager.DATA_KEYS[i]);
+                        label.setText(BoatDataManager.getTitleForDataKey(key) + ((lastPoint.valueBool) ? " : TRUE" : " : FALSE"));
+                    }
+                }
+            }
+            
+        });
     }
     
 }

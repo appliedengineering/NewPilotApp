@@ -22,6 +22,7 @@ public abstract class Driver {
      */
     public abstract boolean isDataPresent();
     
+        
     public static abstract class DriverData {
     }
 }

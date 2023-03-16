@@ -23,13 +23,16 @@ public class LineChartPanel extends JPanel {
     private GraphPanel graphPanel;
     
     private JLabel titleLabel;
+    private String title;
 
 
     
     public LineChartPanel(String title) {
-        graphPanel = new BarGraphPanel(graphBuffer, title, -100, 100, 25, Color.RED);
+        graphPanel = new BarGraphPanel(graphBuffer, title, -100, 100, 25, Color.BLUE);
+        graphPanel.setBrightBackground();
         titleLabel = new JLabel();
         
+        this.title = title;
         titleLabel.setText(title);
         
         this.setLayout(new BorderLayout());
@@ -46,7 +49,8 @@ public class LineChartPanel extends JPanel {
     }
     
     public void addPoint(DataPoint point){
-        graphBuffer.insertData((int) (point.valueDouble * 100d));
+        titleLabel.setText(String.format("%s : %.2f", title, point.valueDouble));
+        graphBuffer.insertData((int) (point.valueDouble));
     }
     
     

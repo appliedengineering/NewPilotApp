@@ -19,11 +19,11 @@ public class GroundMain implements Runnable {
     
     public volatile boolean isRunning = false;
     
-    private CompassDriver compassDriver = new CompassDriver(GroundDataManager.compassHeading);
+    private CompassDriver compassDriver = new CompassDriver(GroundDataManager.compassHeading, "port");
 
-    private GpsDriver gpsDriver = new GpsDriver(GroundDataManager.localGpsData);
+    private GpsDriver gpsDriver = new GpsDriver(GroundDataManager.localGpsData, "port");
     
-    private StepperDriver stepperDriver = new StepperDriver();
+    private StepperDriver stepperDriver = new StepperDriver("port");
     
     public volatile long runDelay = 5;
 

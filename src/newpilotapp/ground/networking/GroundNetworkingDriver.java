@@ -26,9 +26,9 @@ public class GroundNetworkingDriver implements Runnable {
     
     private final static int    REQUEST_TIMEOUT = 1000;                  //  msecs
     private final static int    REQUEST_RETRIES = 10; // Integer.MAX_VALUE;     //  retry infinitely
-    private final static String SERVER_ENDPOINT = "tcp://192.168.1.232:5555";
+    private final static String SERVER_ENDPOINT = "tcp://169.254.225.222:5555";
     
-    public volatile long runDelay = 10;
+    public volatile long runDelay = 0;
 
 
     @Override

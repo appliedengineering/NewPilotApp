@@ -21,7 +21,7 @@ public class SettingsContentPane extends ContentPane {
     // panels by settings type
     private SettingsPanel networkingPanel;
     private SettingsPanel compassOffsetPanel;
-
+    
     public SettingsContentPane() {
         this.setLayout(new BorderLayout());
         

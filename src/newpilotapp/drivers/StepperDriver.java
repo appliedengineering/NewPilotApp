@@ -24,10 +24,10 @@ public class StepperDriver { // part of Sector2a
     
     SerialDriver stepperSerial = new SerialDriver();
 
-    public StepperDriver() {
+    public StepperDriver(String port) {
         stepperSerial = new SerialDriver();
         stepperSerial.setReadTimeout(50);
-        stepperSerial.setSerialPortName("0-1.3"); // port location
+        stepperSerial.setSerialPortName(port); // port location
     }
     
      public void init(){

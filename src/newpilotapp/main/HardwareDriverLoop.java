@@ -16,11 +16,11 @@ import newpilotapp.logging.Console;
  */
 public class HardwareDriverLoop implements Runnable {
     
-    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading);
+    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, "port");
 
-    private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData);
+    private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, "port");
     
-    private StepperDriver stepperDriver = new StepperDriver();
+    private StepperDriver stepperDriver = new StepperDriver("port");
 
 
     
