@@ -19,9 +19,9 @@ public class GroundMain implements Runnable {
     
     public volatile boolean isRunning = false;
     
-    private CompassDriver compassDriver = new CompassDriver(GroundDataManager.compassHeading, "port");
+    private CompassDriver compassDriver = new CompassDriver(GroundDataManager.compassHeading, "1-1.2");
 
-    private GpsDriver gpsDriver = new GpsDriver(GroundDataManager.localGpsData, "port");
+    // private GpsDriver gpsDriver = new GpsDriver(GroundDataManager.localGpsData, "port");
     
     private StepperDriver stepperDriver = new StepperDriver("port");
     
@@ -31,7 +31,8 @@ public class GroundMain implements Runnable {
     private void init() {
         try {
         compassDriver.init();
-        gpsDriver.init();
+        // gpsDriver.init();
+        
         stepperDriver.init();
 
         } catch (Exception e) {
@@ -51,7 +52,7 @@ public class GroundMain implements Runnable {
             try {
                 compassDriver.recieveData();     
                 if(System.currentTimeMillis()-gpsLastRead > 1000) { // read gps values every second
-                    gpsDriver.recieveData();
+                    // gpsDriver.recieveData();
                     gpsLastRead = System.currentTimeMillis();
                 }
                 stepperDriver.sendData(BoatDataManager.telemetryHeading.getValue()); // stepper motor updates itself based on current conditions

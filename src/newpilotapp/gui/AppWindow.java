@@ -12,6 +12,7 @@ import javax.swing.WindowConstants;
 import newpilotapp.gui.components.StatusBar;
 import newpilotapp.gui.components.contentpanes.DataContentPane;
 import newpilotapp.gui.components.contentpanes.DebugContentPane;
+import newpilotapp.gui.components.contentpanes.MapContentPane;
 import newpilotapp.gui.components.contentpanes.SettingsContentPane;
 import newpilotapp.gui.components.contentpanes.TelemetryContentPane;
 
@@ -36,6 +37,7 @@ public class AppWindow  {
     private TelemetryContentPane telemetryPane;
     private DataContentPane dataPane;
     private SettingsContentPane settingsPane;
+    private MapContentPane mapPane;
 
     
     
@@ -68,6 +70,9 @@ public class AppWindow  {
         settingsPane = new SettingsContentPane();
         settingsPane.title = "Settings";
         tabbedPane.addPane(settingsPane);
+        
+        // mapPane = new MapContentPane();
+        // tabbedPane.addPane(mapPane);
 
         
         frame.add(tabbedPane, BorderLayout.CENTER);

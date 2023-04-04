@@ -28,7 +28,7 @@ public class GroundNetworkingDriver implements Runnable {
     private final static int    REQUEST_RETRIES = 10; // Integer.MAX_VALUE;     //  retry infinitely
     private final static String SERVER_ENDPOINT = "tcp://169.254.225.222:5555";
     
-    public volatile long runDelay = 0;
+    public volatile long runDelay = 100;
 
 
     @Override
@@ -143,10 +143,10 @@ public class GroundNetworkingDriver implements Runnable {
             // packer.packMapHeader(2); // the number of (key, value) pairs
 
             // packer.packString("la"); // latitude
-            packer.packDouble(Math.random());
+            packer.packDouble(34.1258837);
 
             // packer.packString("lo"); // longitude
-            packer.packDouble(Math.random());
+            packer.packDouble(-118.0659589);
             
             packer.close();
             

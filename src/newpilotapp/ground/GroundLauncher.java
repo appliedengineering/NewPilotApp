@@ -14,8 +14,8 @@ public class GroundLauncher {
     
     public static void main(String[] args) {
         GroundMain main = new GroundMain();
-        // Thread groundThread = new Thread(main);
-        // groundThread.start();
+        Thread groundThread = new Thread(main);
+        groundThread.start();
         
         GroundNetworkingDriver networking = new GroundNetworkingDriver();
         Thread networkingThread = new Thread(networking);

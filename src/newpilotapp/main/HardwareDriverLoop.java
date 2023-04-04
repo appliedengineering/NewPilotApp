@@ -7,6 +7,7 @@ package newpilotapp.main;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.GpsCalc;
 import newpilotapp.drivers.StepperDriver;
 import newpilotapp.logging.Console;
 
@@ -16,11 +17,11 @@ import newpilotapp.logging.Console;
  */
 public class HardwareDriverLoop implements Runnable {
     
-    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, "port");
+    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, "1-1.1");
 
-    private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, "port");
+    private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, "1-1.4");
     
-    private StepperDriver stepperDriver = new StepperDriver("port");
+    private StepperDriver stepperDriver = new StepperDriver("1-1.2");
 
 
     
@@ -30,8 +31,8 @@ public class HardwareDriverLoop implements Runnable {
         
     private void init() {
         try {
-        compassDriver.init();
         gpsDriver.init();
+        compassDriver.init();
         stepperDriver.init();
         // sector2aDriver.init();
 
@@ -55,7 +56,16 @@ public class HardwareDriverLoop implements Runnable {
                     gpsDriver.recieveData();
                     gpsLastRead = System.currentTimeMillis();
                 }
-                stepperDriver.sendData(BoatDataManager.telemetryHeading.getValue()); // stepper motor updates itself based on current conditions
+                
+                double compassHeading = BoatDataManager.compassHeading.getValue().compassHeading;
+                double headingOffset = GpsCalc.findHeadingOffset(
+                        BoatDataManager.remoteGpsData.getValue(), 
+                        BoatDataManager.localGpsData.getValue(),
+                        compassHeading);
+                
+                BoatDataManager.telemetryHeading.setValue(compassHeading+headingOffset);
+                
+                stepperDriver.sendData(headingOffset); // stepper motor updates itself based on current conditions
                 //sector2aDriver.sendData();    
 
             } catch (Exception e) {

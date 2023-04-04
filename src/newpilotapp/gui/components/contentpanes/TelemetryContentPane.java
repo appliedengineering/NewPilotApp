@@ -4,6 +4,18 @@
  */
 package newpilotapp.gui.components.contentpanes;
 
+import external.org.openstreetmap.gui.jmapviewer.Coordinate;
+import external.org.openstreetmap.gui.jmapviewer.JMapViewer;
+import external.org.openstreetmap.gui.jmapviewer.JMapViewerTree;
+import external.org.openstreetmap.gui.jmapviewer.Layer;
+import external.org.openstreetmap.gui.jmapviewer.MapMarkerCircle;
+import external.org.openstreetmap.gui.jmapviewer.MapMarkerDot;
+import external.org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
+import external.org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
+import external.org.openstreetmap.gui.jmapviewer.interfaces.MapPolygon;
+import external.org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSource;
+import external.org.openstreetmap.gui.jmapviewer.tilesources.BingTileSource;
+import external.org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -14,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.GpsCalc;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.framework.data.LiveDataObserver;
 import newpilotapp.gui.TabbedContentPane;
@@ -33,6 +46,8 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
     
     private JLabel gpsLocalData;
     private JLabel gpsRemoteData;
+    
+    private JMapViewerTree treeMap;
     
 
     
@@ -55,14 +70,32 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         
         gpsLocalData = new JLabel();
         gpsRemoteData = new JLabel();
+        
+        treeMap = new JMapViewerTree("map");
+        
+        this.title = "Map";
+        treeMap.getViewer().setTileSource(new OsmTileSource.Mapnik());
+        // Layer boatLayer = treeMap.addLayer("boat");
+
+        
+        BoatDataManager.localGpsData.observe(new LiveDataObserver<GpsDriver.GpsData>() {
+            @Override
+            public void update(GpsDriver.GpsData coordinate) {
+                updateMapDisplay();
+            }
+        
+        });
 
         
         // testing
         
+        JPanel charts = new JPanel();
+        charts.setLayout(new BoxLayout(charts, BoxLayout.Y_AXIS));
+        charts.add(compassHeadingChart, BorderLayout.NORTH);
+        charts.add(targetHeadingChart, BorderLayout.SOUTH);
         
-        main.add(compassHeadingChart, BorderLayout.WEST);
-        main.add(targetHeadingChart, BorderLayout.EAST);
-        main.add(telemetryMap, BorderLayout.CENTER);
+        main.add(charts, BorderLayout.WEST);
+        main.add(treeMap, BorderLayout.CENTER);
         
         JPanel gpsPanel = new JPanel();
         gpsPanel.setLayout(new BoxLayout(gpsPanel, BoxLayout.X_AXIS));
@@ -146,6 +179,31 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
             
         });
         
+    }
+    
+    private void updateMapDisplay() {
+        treeMap.getViewer().removeAllMapMarkers();
+        treeMap.getViewer().removeAllMapPolygons();
+        treeMap.getViewer().removeAllMapRectangles();
+        
+        GpsDriver.GpsData local = BoatDataManager.localGpsData.getValue(), 
+                remote = BoatDataManager.remoteGpsData.getValue();
+        
+        if(local == null || remote == null) return;
+        
+        treeMap.getViewer().setDisplayPosition(GpsCalc.getCenter(remote, local), 16);
+        
+        MapPolygon path = new MapPolygonImpl(local, remote, local);
+        treeMap.getViewer().addMapPolygon(path);
+        
+        MapMarker localMark = new MapMarkerDot(new Coordinate(local.lat, local.lon));
+        MapMarker remoteMark = new MapMarkerDot(new Coordinate(remote.lat, remote.lon));
+
+        treeMap.getViewer().addMapMarker(localMark);
+        treeMap.getViewer().addMapMarker(remoteMark);
+
+
+
     }
     
 }

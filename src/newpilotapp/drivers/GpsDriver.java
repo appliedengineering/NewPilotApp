@@ -4,6 +4,7 @@
  */
 package newpilotapp.drivers;
 
+import external.org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.framework.data.MutableLiveData;
 
@@ -83,7 +84,7 @@ public class GpsDriver { // part of Sector2a
         }
     }
     
-    public static class GpsData extends SerialDriver.SerialData {
+    public static class GpsData extends SerialDriver.SerialData implements ICoordinate{
         public double lat, lon; // lattitude, longitude (in decimal degrees)
         public double speed; // in mph
 
@@ -93,6 +94,26 @@ public class GpsDriver { // part of Sector2a
             this.lat = lat;
             this.lon = lon;
             this.speed = speed;
+        }
+
+        @Override
+        public double getLat() {
+            return this.lat;
+        }
+
+        @Override
+        public void setLat(double lat) {
+            this.lat = lat;
+        }
+
+        @Override
+        public double getLon() {
+            return this.lon;
+        }
+
+        @Override
+        public void setLon(double lon) {
+            this.lon = lon;
         }
     }
     

@@ -42,7 +42,7 @@ public class StepperDriver { // part of Sector2a
         try{
                         
             if(Math.abs(difference) < 5) {
-                return;
+                stepperSerial.recieveData(STEPPER_COMMAND_STOP);
             }
             
             if(difference > 0) {

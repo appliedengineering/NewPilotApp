@@ -86,7 +86,10 @@ public class BoatNetworkingDriver implements Runnable {
 
                             GpsDriver.GpsData remote = BoatDataManager.remoteGpsData.getValue();
                             GpsDriver.GpsData local = BoatDataManager.localGpsData.getValue();
-                            BoatDataManager.telemetryHeading.setValue(GpsCalc.findHeadingOffset(remote, local));
+                            BoatDataManager.telemetryHeading.setValue(GpsCalc.findHeadingOffset(
+                                    remote,
+                                    local,
+                            BoatDataManager.compassHeading.getValue().compassHeading));
 
 
                         }
