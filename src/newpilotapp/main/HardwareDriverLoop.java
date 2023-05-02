@@ -92,7 +92,7 @@ public class HardwareDriverLoop implements Runnable {
 
             } catch (Exception e) {
                 // make error visible on display (bc hardware issues need to be resolved physically)
-                Console.error(e.getMessage());
+                // Console.error(e.getMessage());
             }
 
             try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}
