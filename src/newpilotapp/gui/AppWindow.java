@@ -12,6 +12,7 @@ import javax.swing.WindowConstants;
 import newpilotapp.gui.components.StatusBar;
 import newpilotapp.gui.components.contentpanes.DataContentPane;
 import newpilotapp.gui.components.contentpanes.DebugContentPane;
+import newpilotapp.gui.components.contentpanes.DriverDisplayContentPane;
 import newpilotapp.gui.components.contentpanes.MapContentPane;
 import newpilotapp.gui.components.contentpanes.SettingsContentPane;
 import newpilotapp.gui.components.contentpanes.TelemetryContentPane;
@@ -38,6 +39,7 @@ public class AppWindow  {
     private DataContentPane dataPane;
     private SettingsContentPane settingsPane;
     private MapContentPane mapPane;
+    private DriverDisplayContentPane driverPane;
 
     
     
@@ -70,6 +72,10 @@ public class AppWindow  {
         settingsPane = new SettingsContentPane();
         settingsPane.title = "Settings";
         tabbedPane.addPane(settingsPane);
+        
+        driverPane = new DriverDisplayContentPane();
+        driverPane.title = "Driver";
+        tabbedPane.addPane(driverPane);
         
         // mapPane = new MapContentPane();
         // tabbedPane.addPane(mapPane);
