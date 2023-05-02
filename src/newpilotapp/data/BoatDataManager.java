@@ -23,17 +23,22 @@ public class BoatDataManager {
     // GUI
     public static MutableLiveData<StringBuffer> errorStatus = new MutableLiveData<>(new StringBuffer("--- START OF LOG ---"));
     public static MutableLiveData<Boolean> isDebugDataOn = new MutableLiveData<>(false);
+    public static MutableLiveData<Boolean> isStepperCalibrateOn = new MutableLiveData<>(false);
     
     // Sensor Data
     public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(); 
     public static MutableLiveData<Double> ambientTemp = new MutableLiveData<>();
     public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>();
     
-    public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.12414384566719, -118.07275692865537, 0)); // testing
+    public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.125914, -118.066082, 0)); // testing
     
     public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
 
-    public static MutableLiveData<Map<String, List<DataPoint>>> dataFromBoatController = new MutableLiveData<>(new HashMap<>()); // data provided by elec
+    // public static MutableLiveData<Map<String, List<DataPoint>>> dataFromBoatController = new MutableLiveData<>(new HashMap<>()); // data provided by elec
+
+    // Elec
+    public static MutableLiveData<Double> elecVoltage = new MutableLiveData<>(0d);
+    public static MutableLiveData<Double> elecCurrent = new MutableLiveData<>(0d);
 
 
     // Hardware Vitals

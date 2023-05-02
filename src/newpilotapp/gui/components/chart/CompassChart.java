@@ -96,6 +96,9 @@ public class CompassChart extends JPanel {
                 (int) (getHeight()/2+width/2*Math.sin(drawAngle/180*Math.PI)));
         g2.drawArc(widthPadding, heightPadding, width, width, 0, 360);
         // Console.log("REPAINT " + System.currentTimeMillis());
+        
+        g2.setColor(Color.red);
+        g2.drawString(String.format("%.2f", angle), 50, 50);
 
     }
     

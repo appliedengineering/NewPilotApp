@@ -12,7 +12,12 @@ import external.org.zeromq.ZContext;
 import external.org.zeromq.ZMQ;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import newpilotapp.data.BoatDataManager;
+import newpilotapp.data.DataPoint;
 import newpilotapp.ground.data.GroundDataManager;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.logging.Console;
@@ -28,7 +33,7 @@ public class GroundNetworkingDriver implements Runnable {
     private final static int    REQUEST_RETRIES = 10; // Integer.MAX_VALUE;     //  retry infinitely
     private final static String SERVER_ENDPOINT = "tcp://169.254.225.222:5555";
     
-    public volatile long runDelay = 100;
+    public volatile long runDelay = 1000;
 
 
     @Override
@@ -97,14 +102,14 @@ public class GroundNetworkingDriver implements Runnable {
             }
         }
     }
-
     
     /**
      * Parses data from boatstation
      * @param reply messagepack data in bytes
      * @return true if valid data, false if corrupted
      */
-    private boolean parseReply(byte[] reply) {
+    private boolean parseReply(byte[] reply) {  
+        System.out.println("parse1");
         GpsDriver.GpsData data = GroundDataManager.remoteGpsData.getValue();
         if(data == null) {
             data = new GpsDriver.GpsData();
@@ -143,10 +148,10 @@ public class GroundNetworkingDriver implements Runnable {
             // packer.packMapHeader(2); // the number of (key, value) pairs
 
             // packer.packString("la"); // latitude
-            packer.packDouble(34.1258837);
+            packer.packDouble(gps.lat);
 
             // packer.packString("lo"); // longitude
-            packer.packDouble(-118.0659589);
+            packer.packDouble(gps.lon);
             
             packer.close();
             

@@ -30,6 +30,7 @@ public class StatusBar extends JPanel {
     private JLabel networkStatusLabel;
     private JLabel debugStatusLabel;
     private JLabel heapStatusLabel;
+    private JLabel stepperCalibrateLabel;
     private JPanel vitals;
 
     public StatusBar() {
@@ -61,9 +62,14 @@ public class StatusBar extends JPanel {
         heapStatusLabel  = new JLabel();
         heapStatusLabel.setForeground(Color.white);
         
+        stepperCalibrateLabel = new JLabel();
+        stepperCalibrateLabel.setForeground(Color.white);
+        
         // add(currentStatusLabel, BorderLayout.CENTER);
 
   
+        vitals.add(stepperCalibrateLabel);
+        vitals.add(Box.createRigidArea(new Dimension(8,0))); 
         vitals.add(debugStatusLabel);
         vitals.add(Box.createRigidArea(new Dimension(8,0))); 
         vitals.add(networkStatusLabel);
@@ -122,6 +128,19 @@ public class StatusBar extends JPanel {
         }
         );
         
+        BoatDataManager.isStepperCalibrateOn.observe(new LiveDataObserver<Boolean>() {
+            @Override
+            public void update(Boolean stepper) {
+                if(stepper) {
+                    stepperCalibrateLabel.setText("Stepper Calibrate ON");
+                } else {
+                    stepperCalibrateLabel.setText("Stepper Calibrate OFF");
+                }
+            }
+        
+        }
+        );
+        
         
         // MOUSE CLICK LISTENERS
         debugStatusLabel.addMouseListener(new MouseListener(){
@@ -138,6 +157,16 @@ public class StatusBar extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.gc();
+            }
+            
+            public void mousePressed(MouseEvent e) {}public void mouseReleased(MouseEvent e) {}public void mouseEntered(MouseEvent e) {}public void mouseExited(MouseEvent e) {}
+
+        });
+        
+        stepperCalibrateLabel.addMouseListener(new MouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BoatDataManager.isStepperCalibrateOn.setValue(!BoatDataManager.isStepperCalibrateOn.getValue());
             }
             
             public void mousePressed(MouseEvent e) {}public void mouseReleased(MouseEvent e) {}public void mouseEntered(MouseEvent e) {}public void mouseExited(MouseEvent e) {}

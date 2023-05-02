@@ -13,6 +13,14 @@ import newpilotapp.ground.networking.GroundNetworkingDriver;
 public class GroundLauncher {
     
     public static void main(String[] args) {
+        
+        if(args.length == 0) {
+            return;
+        }
+        if(!args[0].equals("run")) {
+            return;
+        }
+        
         GroundMain main = new GroundMain();
         Thread groundThread = new Thread(main);
         groundThread.start();

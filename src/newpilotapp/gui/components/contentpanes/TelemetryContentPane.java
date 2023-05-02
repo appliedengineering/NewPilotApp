@@ -17,6 +17,7 @@ import external.org.openstreetmap.gui.jmapviewer.tilesources.BingAerialTileSourc
 import external.org.openstreetmap.gui.jmapviewer.tilesources.BingTileSource;
 import external.org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.Box;
@@ -75,6 +76,7 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         
         this.title = "Map";
         treeMap.getViewer().setTileSource(new OsmTileSource.Mapnik());
+        treeMap.getViewer().setDisplayPosition(BoatDataManager.remoteGpsData.getValue(), 18);
         // Layer boatLayer = treeMap.addLayer("boat");
 
         
@@ -191,13 +193,13 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         
         if(local == null || remote == null) return;
         
-        treeMap.getViewer().setDisplayPosition(GpsCalc.getCenter(remote, local), 16);
+       // treeMap.getViewer().setDisplayPosition(GpsCalc.getCenter(remote, local), 18);
         
         MapPolygon path = new MapPolygonImpl(local, remote, local);
         treeMap.getViewer().addMapPolygon(path);
         
-        MapMarker localMark = new MapMarkerDot(new Coordinate(local.lat, local.lon));
-        MapMarker remoteMark = new MapMarkerDot(new Coordinate(remote.lat, remote.lon));
+        MapMarker localMark = new MapMarkerDot(Color.BLUE, local.lat, local.lon);
+        MapMarker remoteMark = new MapMarkerDot(Color.RED, remote.lat, remote.lon);
 
         treeMap.getViewer().addMapMarker(localMark);
         treeMap.getViewer().addMapMarker(remoteMark);

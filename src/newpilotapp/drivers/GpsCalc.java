@@ -12,9 +12,8 @@ import newpilotapp.data.BoatDataManager;
  */
 public class GpsCalc {
     
-    public static double findHeadingOffset(GpsDriver.GpsData remote, GpsDriver.GpsData local, double compassHeading){
+    public static double findHeading(GpsDriver.GpsData remote, GpsDriver.GpsData local){
         if(remote == null || local == null) return 0; // aka don't move
-        if(BoatDataManager.compassHeading.getValue() == null) return 0;
 
         double deltaLat = remote.lat - local.lat;
         double deltaLon = remote.lon - local.lon;
@@ -31,8 +30,7 @@ public class GpsCalc {
         }
 
 
-        int difference = (int) (bearing - compassHeading);
-        return difference;
+        return bearing;
     }
     
     public static GpsDriver.GpsData getCenter(GpsDriver.GpsData remote, GpsDriver.GpsData local) {

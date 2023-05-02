@@ -23,12 +23,19 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
     private static final byte[] COMPASS_COMMAND_BYTES = new byte[] {67};
     
     private MutableLiveData<CompassData> compassHeading;
+    
+    private int offset = 0;
 
     public CompassDriver(MutableLiveData<CompassData> compassHeading, String port) {
         this.compassHeading = compassHeading;
         sector2bSerial = new SerialDriver();
         sector2bSerial.setReadTimeout(50);
         sector2bSerial.setSerialPortName(port); // port location
+    }
+    
+    public CompassDriver(MutableLiveData<CompassData> compassHeading, String port, int offset) {
+        this(compassHeading, port);
+        this.offset = offset;
     }
     
     public void init(){
@@ -49,9 +56,12 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
             compassData.systemCalibration = Integer.parseInt(tokens[1]);
             compassData.magneticCalibration = Integer.parseInt(tokens[2]);
             
+            compassData.compassHeading = (compassData.compassHeading + offset + 360) % 360;
+            
             compassHeading.setValue(compassData);
 
         } catch (Exception e) {
+            e.printStackTrace();
             // corrupted data
             compassHeading.setValue(null);
         }

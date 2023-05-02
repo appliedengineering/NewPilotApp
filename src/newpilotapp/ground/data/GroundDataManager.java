@@ -15,7 +15,7 @@ import newpilotapp.framework.data.MutableLiveData;
 public class GroundDataManager {
     
     // note the meaning of "local" in this context
-    public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>(new GpsDriver.GpsData(1.23456, 2.34567, 1));
+    public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.125914, -118.066081, 1));
     public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>();
     public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(); 
     public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);

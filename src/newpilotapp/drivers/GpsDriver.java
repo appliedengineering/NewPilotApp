@@ -25,7 +25,7 @@ public class GpsDriver { // part of Sector2a
     public GpsDriver(MutableLiveData<GpsData> localGpsData, String port) {
         this.localGpsData = localGpsData;
         gpsSerial = new SerialDriver();
-        gpsSerial.setReadTimeout(100);
+        gpsSerial.setReadTimeout(50);
         gpsSerial.setSerialPortName(port); // port location
     }
     

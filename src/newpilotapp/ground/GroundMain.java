@@ -6,6 +6,7 @@ package newpilotapp.ground;
 
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.GpsCalc;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.drivers.StepperDriver;
 import newpilotapp.ground.data.GroundDataManager;
@@ -23,7 +24,7 @@ public class GroundMain implements Runnable {
 
     // private GpsDriver gpsDriver = new GpsDriver(GroundDataManager.localGpsData, "port");
     
-    private StepperDriver stepperDriver = new StepperDriver("port");
+    private StepperDriver stepperDriver = new StepperDriver("1-1.4");
     
     public volatile long runDelay = 5;
 
@@ -50,12 +51,23 @@ public class GroundMain implements Runnable {
         isRunning = true;
         while(isRunning) {
             try {
-                compassDriver.recieveData();     
+                compassDriver.recieveData();    
+                System.out.println("Compass" + GroundDataManager.compassHeading.getValue().compassHeading);
                 if(System.currentTimeMillis()-gpsLastRead > 1000) { // read gps values every second
                     // gpsDriver.recieveData();
                     gpsLastRead = System.currentTimeMillis();
                 }
-                stepperDriver.sendData(BoatDataManager.telemetryHeading.getValue()); // stepper motor updates itself based on current conditions
+                System.out.println(GroundDataManager.remoteGpsData.getValue() + " " + GroundDataManager.localGpsData.getValue());
+                double compassHeading = GroundDataManager.compassHeading.getValue().compassHeading;
+                double headingOffset = GpsCalc.findHeading(
+                        GroundDataManager.remoteGpsData.getValue(), 
+                        GroundDataManager.localGpsData.getValue());
+                
+                GroundDataManager.telemetryHeading.setValue(headingOffset);
+                System.out.println("Offset" + headingOffset);
+                double direction = compassHeading-headingOffset;
+                if(direction > 180) direction -= 360;
+                stepperDriver.sendData(direction); // stepper motor updates itself based on current conditions
                 //sector2aDriver.sendData();    
 
             } catch (Exception e) {

@@ -40,15 +40,20 @@ public class StepperDriver { // part of Sector2a
     
     public void sendData(double difference) {
         try{
-                        
-            if(Math.abs(difference) < 5) {
+            
+            if(Math.abs(difference) < 10) {
                 stepperSerial.recieveData(STEPPER_COMMAND_STOP);
+                // Thread.sleep(100);
+                System.out.println("STOP");
+                return;
             }
             
             if(difference > 0) {
                 stepperSerial.recieveData(STEPPER_COMMAND_RIGHT);
+                System.out.println("RIGHT");
             } else if(difference < 0) {
                 stepperSerial.recieveData(STEPPER_COMMAND_LEFT);
+                System.out.println("LEFT");
             }
             
             

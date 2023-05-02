@@ -18,7 +18,7 @@ public class GroundDesktopWindow {
     private GroundDataPane pane;
     
     public static void main(String[] args) {
-        GroundDesktopNetworkingDriver desktopNetworking = new GroundDesktopNetworkingDriver("localhost", "5555");
+        GroundDesktopNetworkingDriver desktopNetworking = new GroundDesktopNetworkingDriver("169.254.225.222", "5555");
         Thread networkThread = new Thread(desktopNetworking);
         
         new GroundDesktopWindow();

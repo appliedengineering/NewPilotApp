@@ -97,7 +97,9 @@ public class SerialDriver extends Driver {
         }
         try {
             byte[] readBuffer = new byte[256];
-            serialPort.writeBytes(command, command.length);
+            if(command.length != 0) {
+                serialPort.writeBytes(command, command.length);
+            }
             int numRead = serialPort.readBytes(readBuffer,
                                                  readBuffer.length);
             
