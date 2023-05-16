@@ -34,7 +34,7 @@ public class BoatDataManager {
     
     public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
 
-    // public static MutableLiveData<Map<String, List<DataPoint>>> dataFromBoatController = new MutableLiveData<>(new HashMap<>()); // data provided by elec
+    public static MutableLiveData<Map<String, List<DataPoint>>> dataFromBoatController = new MutableLiveData<>(new HashMap<>()); // data provided by elec
 
     // Elec
     public static MutableLiveData<Double> elecVoltage = new MutableLiveData<>(0d);
