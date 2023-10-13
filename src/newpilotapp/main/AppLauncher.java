@@ -28,6 +28,7 @@ public class AppLauncher {
 
 
     public static void main(String[] args) {
+        
         if(args.length == 0) {
             return;
         }
@@ -63,20 +64,6 @@ public class AppLauncher {
         } catch (Exception e) {
         }
         
-        
-//        new Thread(() -> {
-//            while(true) {
-//                DataManager.networkStatus.setData(Boolean.TRUE);
-//                try {
-//                    Thread.sleep(10);
-//                } catch (InterruptedException ex) {
-//                }
-//                DataManager.networkStatus.setData(Boolean.FALSE);
-//                try {
-//                    Thread.sleep(10);
-//                } catch (InterruptedException ex) {
-//                }            }
-//        }).start();
     }
     
 }

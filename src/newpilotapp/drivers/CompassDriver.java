@@ -61,7 +61,6 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
             compassHeading.setValue(compassData);
 
         } catch (Exception e) {
-            e.printStackTrace();
             // corrupted data
             compassHeading.setValue(null);
         }

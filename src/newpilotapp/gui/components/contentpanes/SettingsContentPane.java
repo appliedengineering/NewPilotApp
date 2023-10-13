@@ -29,9 +29,9 @@ public class SettingsContentPane extends ContentPane {
         settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
         this.add(settingsPanel, BorderLayout.NORTH);
         
-        networkingPanel = new SettingsPanel("Network Settings");
+        networkingPanel = new SettingsPanel("Network Settings", null);
         
-        compassOffsetPanel = new SettingsPanel("Compass Offsets");
+        compassOffsetPanel = new SettingsPanel("Compass Offsets", null);
 
         settingsPanel.add(networkingPanel);
         settingsPanel.add(compassOffsetPanel);

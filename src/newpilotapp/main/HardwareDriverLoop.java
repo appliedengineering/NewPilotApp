@@ -27,7 +27,7 @@ public class HardwareDriverLoop implements Runnable {
 
     private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, "1-1.4");
     
-    // private StepperDriver stepperDriver = new StepperDriver("1-1.2");
+    private StepperDriver stepperDriver = new StepperDriver("1-1.2");
     
     private SerialDriver motorControllerDriver = new SerialDriver();
 
@@ -41,10 +41,10 @@ public class HardwareDriverLoop implements Runnable {
         try {
         gpsDriver.init();
         compassDriver.init();
-        // stepperDriver.init();
+        stepperDriver.init();
         
-        motorControllerDriver.setSerialPortName("1-1.2");
-        motorControllerDriver.init();
+//        motorControllerDriver.setSerialPortName("1-1.2");
+//        motorControllerDriver.init();
         // sector2aDriver.init();
 
         } catch (Exception e) {
@@ -63,32 +63,32 @@ public class HardwareDriverLoop implements Runnable {
         while(isRunning){
             try {
                 compassDriver.recieveData();
-                if(System.currentTimeMillis()-gpsLastRead > 1000) { // read gps values every second
-                    gpsDriver.recieveData();
-                    gpsLastRead = System.currentTimeMillis();
-                }
+//                if(System.currentTimeMillis()-gpsLastRead > 500) { // read gps values every second
+//                    gpsDriver.recieveData();
+//                    gpsLastRead = System.currentTimeMillis();
+//                }
                 
-                SerialData data = motorControllerDriver.recieveData(new byte[0]);
+//                SerialData data = motorControllerDriver.recieveData(new byte[0]);
+//                
+//                parseData(data);
                 
-                parseData(data);
                 
+//                double compassHeading = BoatDataManager.compassHeading.getValue().compassHeading;
+//                double headingOffset = GpsCalc.findHeading(
+//                        BoatDataManager.remoteGpsData.getValue(), 
+//                        BoatDataManager.localGpsData.getValue());
                 
-                double compassHeading = BoatDataManager.compassHeading.getValue().compassHeading;
-                double headingOffset = GpsCalc.findHeading(
-                        BoatDataManager.remoteGpsData.getValue(), 
-                        BoatDataManager.localGpsData.getValue());
-                
-                BoatDataManager.telemetryHeading.setValue(headingOffset);
-                if(BoatDataManager.isStepperCalibrateOn.getValue()) {
-                    // stepperDriver.sendData(45);
-                } else {
-                    
-                    // ex. telemetryHeading = 0
-                    
-                    double direction = compassHeading-headingOffset;
-                    if(direction > 180) direction -= 360;
-                    // stepperDriver.sendData(direction); // stepper motor updates itself based on current conditions
-                }//sector2aDriver.sendData();    
+//                BoatDataManager.telemetryHeading.setValue(headingOffset);
+//                if(BoatDataManager.isStepperCalibrateOn.getValue()) {
+//                    stepperDriver.sendData(45);
+//                } else {
+//                    
+//                    // ex. telemetryHeading = 0
+//                    
+//                    double direction = compassHeading-headingOffset;
+//                    if(direction > 180) direction -= 360;
+//                    stepperDriver.sendData(direction); // stepper motor updates itself based on current conditions
+//                }//sector2aDriver.sendData();    
 
             } catch (Exception e) {
                 // make error visible on display (bc hardware issues need to be resolved physically)
@@ -109,19 +109,19 @@ public class HardwareDriverLoop implements Runnable {
         compassDriver.stop();
     }
 
-    private void parseData(SerialData data) {
-        try{
-            String dataString = new String(data.byteData);
-            String[] tokens = dataString.split(",");
-            
-            double voltage = Double.parseDouble(tokens[0]);
-            double current = Double.parseDouble(tokens[1]);
-            BoatDataManager.elecVoltage.setValue(voltage);
-            BoatDataManager.elecCurrent.setValue(current);
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void parseData(SerialData data) {
+//        try{
+//            String dataString = new String(data.byteData);
+//            String[] tokens = dataString.split(",");
+//            
+//            double voltage = Double.parseDouble(tokens[0]);
+//            double current = Double.parseDouble(tokens[1]);
+//            BoatDataManager.elecVoltage.setValue(voltage);
+//            BoatDataManager.elecCurrent.setValue(current);
+//        }catch(Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     
     
     

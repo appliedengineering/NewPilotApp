@@ -16,12 +16,21 @@ import javax.swing.border.TitledBorder;
  * @author jeffrey
  */
 public class SettingsPanel extends JPanel {
-
-    public SettingsPanel(String title) {
+    private String[] fields;
+    
+    public SettingsPanel(String title, String[] fields) {
         this.setLayout(new GridLayout(0, 2));
         this.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(), title, TitledBorder.LEFT, TitledBorder.TOP));
         
+        this.fields = fields;
+        
+        init();
+        
+    }
+    
+    public void init() {
+        this.add(new JTextField(30));
     }
     
     

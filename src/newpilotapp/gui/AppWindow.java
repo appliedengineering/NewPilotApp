@@ -101,7 +101,7 @@ public class AppWindow  {
 //            }
 //          });
         
-        // device.setFullScreenWindow(frame);
+         device.setFullScreenWindow(frame);
 
     }
     

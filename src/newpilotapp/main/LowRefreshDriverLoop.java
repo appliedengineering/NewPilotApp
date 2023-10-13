@@ -38,8 +38,6 @@ public class LowRefreshDriverLoop implements Runnable {
                     BoatDataManager.heapSpaceTotal.setValue(heapSize);
                     BoatDataManager.heapSpaceFree.setValue(heapFreeSize);
                     
-                    BoatDataManager.telemetryHeading.setValue(BoatDataManager.telemetryHeading.getValue()+1);
-
                     
                 } catch (Exception e) {
                     // make error visible on display (bc hardware issues need to be resolved physically)
