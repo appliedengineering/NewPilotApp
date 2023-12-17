@@ -59,6 +59,8 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
             compassData.compassHeading = (compassData.compassHeading + offset + 360) % 360;
             
             compassHeading.setValue(compassData);
+            
+            System.out.println(compassData.compassHeading);
 
         } catch (Exception e) {
             // corrupted data

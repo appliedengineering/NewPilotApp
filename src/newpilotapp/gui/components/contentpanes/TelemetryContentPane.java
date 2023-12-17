@@ -45,8 +45,8 @@ import newpilotapp.logging.Console;
  */
 public class TelemetryContentPane extends TabbedContentPane.ContentPane{
     
-    // private CompassChart compassHeadingChart;
-    // private CompassChart targetHeadingChart;
+     private CompassChart compassHeadingChart;
+     private CompassChart targetHeadingChart;
     
     private JLabel gpsLocalData;
     private JLabel gpsRemoteData;
@@ -59,12 +59,12 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
 
     
     public TelemetryContentPane() {
-        // compassHeadingChart = new CompassChart("Compass Heading");
-        // targetHeadingChart = new CompassChart("Target Heading");
+         compassHeadingChart = new CompassChart("Compass Heading");
+         targetHeadingChart = new CompassChart("Target Heading");
         
-        Dimension side = new Dimension(150, 0);
-        // compassHeadingChart.setPreferredSize(side);
-        // targetHeadingChart.setPreferredSize(side);
+        Dimension side = new Dimension(150, 150);
+         compassHeadingChart.setPreferredSize(side);
+         targetHeadingChart.setPreferredSize(side);
 
                 
         // GridLayout experimentLayout = new GridLayout(0,3); // 3 columns, rows expand automatically
@@ -93,10 +93,10 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         JPanel charts = new JPanel();
         charts.setLayout(new BorderLayout());
         
-        setUpMapControls(charts);
+//        setUpMapControls(charts);
         
-//        charts.add(compassHeadingChart, BorderLayout.NORTH);
-//        charts.add(targetHeadingChart, BorderLayout.SOUTH);
+        charts.add(compassHeadingChart, BorderLayout.NORTH);
+        charts.add(targetHeadingChart, BorderLayout.SOUTH);
         
         main.add(charts, BorderLayout.WEST);
         main.add(treeMap, BorderLayout.CENTER);
@@ -111,31 +111,32 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
 
         this.add(main, BorderLayout.CENTER);
 
-//        BoatDataManager.compassHeading.observe(new LiveDataObserver<CompassDriver.CompassData> () {
-//            @Override
-//            public void update(CompassDriver.CompassData data) {
-//                if(data == null) {
-//                    compassHeadingChart.setHasData(false);
-//                } else {
-//                    compassHeadingChart.setHasData(true);
-//                    compassHeadingChart.setAngle(data.compassHeading);
-//                }
-//            }
-//            
-//        });
-//        
-//        BoatDataManager.telemetryHeading.observe(new LiveDataObserver<Double> () {
-//            @Override
-//            public void update(Double data) {
-//                if(data == null) {
-//                    targetHeadingChart.setHasData(false);
-//                } else {
-//                    targetHeadingChart.setHasData(true);
-//                    targetHeadingChart.setAngle(data);
-//                }
-//            }
-//            
-//        });
+        BoatDataManager.compassHeading.observe(new LiveDataObserver<CompassDriver.CompassData> () {
+            @Override
+            public void update(CompassDriver.CompassData data) {
+                if(data == null) {
+                    compassHeadingChart.setHasData(false);
+                } else {
+                    System.out.println("hi");
+                    compassHeadingChart.setHasData(true);
+                    compassHeadingChart.setAngle(data.compassHeading);
+                }
+            }
+            
+        });
+        
+        BoatDataManager.telemetryHeading.observe(new LiveDataObserver<Double> () {
+            @Override
+            public void update(Double data) {
+                if(data == null) {
+                    targetHeadingChart.setHasData(false);
+                } else {
+                    targetHeadingChart.setHasData(true);
+                    targetHeadingChart.setAngle(data);
+                }
+            }
+            
+        });
         
         BoatDataManager.localGpsData.observe(new LiveDataObserver<GpsDriver.GpsData> () {
             @Override

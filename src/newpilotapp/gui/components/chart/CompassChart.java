@@ -33,6 +33,7 @@ public class CompassChart extends JPanel {
         this.title = titleNew;
         this.setBorder(BorderFactory.createTitledBorder(
         BorderFactory.createEtchedBorder(), title, TitledBorder.LEFT, TitledBorder.TOP));
+        
     }
 
     @Override

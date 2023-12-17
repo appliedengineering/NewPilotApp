@@ -23,7 +23,7 @@ import newpilotapp.logging.Console;
  */
 public class HardwareDriverLoop implements Runnable {
     
-    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, "1-1.1");
+    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, "0-1.3");
 
     private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, "1-1.4");
     
@@ -39,8 +39,8 @@ public class HardwareDriverLoop implements Runnable {
         
     private void init() {
         try {
-        gpsDriver.init();
         compassDriver.init();
+        gpsDriver.init();
         stepperDriver.init();
         
 //        motorControllerDriver.setSerialPortName("1-1.2");
