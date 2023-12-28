@@ -20,6 +20,7 @@ TODO
 - have the ae-boatstation raspberry pi nearby and connected to the same network as your development computer
 - Tools > Java Platforms > Add Platform > Remote Java Standard Edition > Fill out the values > Make sure to test platform
 - java.home should be `/usr/lib/jvm/java-17-openjdk-arm64`
+- Set working directory to `/home/ae/Desktop/Netbeans` for ease.
 - if you get stuck, refer to this: https://www.instructables.com/Efficient-Development-of-Java-for-the-Raspberry-Pi/
 - if you see a large number of packages starting with `external.*`, switch the "Projects" to "Files" view to declutter.
 
