@@ -8,6 +8,7 @@ import external.org.zeromq.SocketType;
 import external.org.zeromq.ZContext;
 import external.org.zeromq.ZMQ.Poller;
 import external.org.zeromq.ZMQ.Socket;
+import newpilotapp.networking.BoatNetworkingDriver;
 
 /**
  *  Check this:
@@ -34,7 +35,7 @@ public class GroundStationClientAlignment {
             int retriesLeft = REQUEST_RETRIES;
             while (retriesLeft > 0 && !Thread.currentThread().isInterrupted()) {
                 //  We send a request, then we work to get a reply
-                String request = String.format("%d", ++sequence);
+                byte[] request = new byte[]{BoatNetworkingDriver.REQUEST_ALIGNMENT};
                 client.send(request);
 
                 int expect_reply = 1;
@@ -55,16 +56,14 @@ public class GroundStationClientAlignment {
                         String reply = client.recvStr();
                         if (reply == null)
                             break; //  Interrupted
-                        if (Integer.parseInt(reply) == sequence) {
+//                        if (Integer.parseInt(reply) == sequence) {
                             System.out.printf(
                                 "I: server replied OK (%s)\n", reply
                             );
                             retriesLeft = REQUEST_RETRIES;
                             expect_reply = 0;
-                        }
-                        else System.out.printf(
-                            "E: malformed reply from server: %s\n", reply
-                        );
+//                        }
+                       
 
                     }
                     else if (--retriesLeft == 0) {

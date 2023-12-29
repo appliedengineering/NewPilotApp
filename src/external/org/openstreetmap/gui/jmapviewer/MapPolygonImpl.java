@@ -102,7 +102,7 @@ public class MapPolygonImpl extends MapObjectImpl implements MapPolygon {
     }
 
     public static Style getDefaultStyle() {
-        return new Style(Color.BLUE, new Color(100, 100, 100, 50), new BasicStroke(2), getDefaultFont());
+        return new Style(Color.BLUE, new Color(100, 100, 100, 50), new BasicStroke(4), getDefaultFont());
     }
 
     @Override

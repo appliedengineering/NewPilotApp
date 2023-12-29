@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +30,8 @@ import newpilotapp.gui.TabbedContentPane.ContentPane;
 public class DebugContentPane extends ContentPane {
     
     private JEditorPane debugOut;
+    private JEditorPane portOut;
+
     
     private JPanel toolBar;
     private JButton clearAll;
@@ -43,15 +46,24 @@ public class DebugContentPane extends ContentPane {
         
         this.setLayout(new BorderLayout());
         
+        
+        
         this.title = "Debug Pane";
         debugOut = new JEditorPane();
-        
-        // debugOut.setForeground(Color.black);
         debugOut.setEditable(false);
         debugOut.setHighlighter(null);
         
+        portOut = new JEditorPane();
+        portOut.setEditable(false);
+        portOut.setHighlighter(null); 
         
-        JScrollPane scrollPane = new JScrollPane(debugOut);
+        JScrollPane scrollPaneLeft = new JScrollPane(debugOut);
+        JScrollPane scrollPaneRight = new JScrollPane(portOut);
+        
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                           scrollPaneLeft, scrollPaneRight);
+        splitPane.setResizeWeight(.5f);
+
 
         
         BoatDataManager.errorStatus.observe(new LiveDataObserver<StringBuffer>() {
@@ -62,7 +74,15 @@ public class DebugContentPane extends ContentPane {
         
         });
         
-        this.add(scrollPane, BorderLayout.CENTER);
+        BoatDataManager.portData.observe(new LiveDataObserver<StringBuffer>() {
+            @Override
+            public void update(StringBuffer data) {
+                portOut.setText(data.toString());
+            }
+        
+        });
+        
+        this.add(splitPane, BorderLayout.CENTER);
         
         
         int p = 8;

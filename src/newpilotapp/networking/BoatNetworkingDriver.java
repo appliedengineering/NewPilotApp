@@ -10,14 +10,10 @@ import external.org.msgpack.core.MessageUnpacker;
 import external.org.zeromq.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.DebugDataCalc;
 import newpilotapp.drivers.GpsCalc;
 import newpilotapp.drivers.GpsDriver;
-import newpilotapp.ground.data.GroundDataManager;
 import newpilotapp.logging.Console;
 
 /**
@@ -38,6 +34,8 @@ public class BoatNetworkingDriver implements Runnable {
     
     public static final byte REQUEST_ALIGNMENT = 0x01;
     public static final byte REQUEST_DATA = 0x11;
+    public static final byte[] REQUEST_DATA_ARR = new byte[]{0x11};
+
 
 
     public BoatNetworkingDriver() {
@@ -92,6 +90,7 @@ public class BoatNetworkingDriver implements Runnable {
 
 
                         }
+                        
                     }
                 } catch (Exception e) {
                     // don't crash networking entirely if something fails LOL
@@ -118,14 +117,18 @@ public class BoatNetworkingDriver implements Runnable {
     }
     
     
-    private GpsDriver.GpsData parseAlignmentReply(byte[] reply) {
+    public static GpsDriver.GpsData parseAlignmentReply(byte[] reply) {
         GpsDriver.GpsData data = new GpsDriver.GpsData();
         try{
             MessageUnpacker unpacker = MessagePack.newDefaultUnpacker(reply, 1, reply.length-1); // trim the first byte
             double lat = unpacker.unpackDouble();
             double lon = unpacker.unpackDouble();
+            double speed = unpacker.unpackDouble();
+
             data.lat = lat;
             data.lon = lon;
+            data.speed = speed;
+
         }catch(IOException e) {
             Console.error("Failed to unpack alignment data");
         }
@@ -135,13 +138,14 @@ public class BoatNetworkingDriver implements Runnable {
     }
     
     /**
-     * Data (command) that is to be sent to boatstation
+     * Data (command) that is to be sent to groundstation
      * @return 
      */
 
-    private byte[] getAlignmentDataToSend() {
+    public static byte[] getAlignmentDataToSend() {
         try{
             ByteArrayOutputStream out = new ByteArrayOutputStream();
+            out.write(REQUEST_ALIGNMENT);
             MessagePacker packer = MessagePack.newDefaultPacker(out);
 
             GpsDriver.GpsData gps = BoatDataManager.localGpsData.getValue();
@@ -149,9 +153,13 @@ public class BoatNetworkingDriver implements Runnable {
             if(gps == null) {
                 packer.packDouble(0); // latitude
                 packer.packDouble(0); // longitude
+                packer.packDouble(0); // speed
+
             } else {
                 packer.packDouble(gps.lat); // latitude
                 packer.packDouble(gps.lon); // longitude
+                packer.packDouble(gps.speed); // speed
+
             }
             
             

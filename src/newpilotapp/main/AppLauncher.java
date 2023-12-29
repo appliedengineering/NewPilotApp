@@ -7,8 +7,14 @@ package newpilotapp.main;
 import com.formdev.flatlaf.*;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import newpilotapp.networking.GroundNetworkingDriver;
 import newpilotapp.gui.AppWindow;
 import newpilotapp.networking.BoatNetworkingDriver;
 
@@ -18,7 +24,9 @@ import newpilotapp.networking.BoatNetworkingDriver;
  */
 public class AppLauncher {
     public static AppWindow appWindow;
-    public static BoatNetworkingDriver alignmentNetworking;
+    public static BoatNetworkingDriver boatAlignmentNetworking;
+    public static GroundNetworkingDriver groundAlignmentNetworking;
+
     
     public static HardwareDriverLoop hardwareLoop;
     public static LowRefreshDriverLoop lowRefreshLoop;
@@ -32,22 +40,48 @@ public class AppLauncher {
         if(args.length == 0) {
             return;
         }
+        if(args[0].equals("runScript")) {
+            try {
+                ProcessBuilder pb = new ProcessBuilder("/home/ae-boatstation/Desktop/runJava.sh");
+                Map<String, String> env = pb.environment();
+                env.put("DISPLAY", "0:0");
+//                pb.directory(new File("/home/ae-boatsation/Desktop/"));
+                Process p = pb.start();
+            } catch (IOException ex) {
+                Logger.getLogger(AppLauncher.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return;
+        }
         if(!args[0].equals("run")) {
             return;
         }
 
         FlatLightLaf.setup();
         
-        hardwareLoop = new HardwareDriverLoop();
-        hardwareThread = new Thread(hardwareLoop);
-        hardwareThread.start();
+        if(args.length == 2) {
+            if(args[1].equals("boatNetwork")){
+                hardwareLoop = new HardwareDriverLoop();
+                hardwareThread = new Thread(hardwareLoop);
+                hardwareThread.start();
+            } else if(args[1].equals("groundNetwork")){}
+        }
+        
+        
         
         lowRefreshLoop = new LowRefreshDriverLoop();
         lowRefreshThread = new Thread(lowRefreshLoop);
         lowRefreshThread.start();
         
-        alignmentNetworking = new BoatNetworkingDriver();
-        alignmentNetworking.start();
+        
+        if(args.length == 2) {
+            if(args[1].equals("boatNetwork")){
+                boatAlignmentNetworking = new BoatNetworkingDriver();
+                boatAlignmentNetworking.start();
+            } else if(args[1].equals("groundNetwork")){
+                groundAlignmentNetworking = new GroundNetworkingDriver();
+                groundAlignmentNetworking.start();
+            }
+        }
         
         try {
             javax.swing.SwingUtilities.invokeAndWait(

@@ -4,6 +4,7 @@
  */
 package newpilotapp.drivers;
 
+import external.org.openstreetmap.gui.jmapviewer.JMapViewer;
 import newpilotapp.data.BoatDataManager;
 
 /**
@@ -36,5 +37,6 @@ public class GpsCalc {
     public static GpsDriver.GpsData getCenter(GpsDriver.GpsData remote, GpsDriver.GpsData local) {
         return new GpsDriver.GpsData((remote.lat+local.lat)/2, (remote.lon + local.lon)/2, 0);
     }
+    
     
 }

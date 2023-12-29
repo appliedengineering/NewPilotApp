@@ -18,11 +18,6 @@ import newpilotapp.gui.components.contentpanes.SettingsContentPane;
 import newpilotapp.gui.components.contentpanes.TelemetryContentPane;
 
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 /**
  *
  * @author Jeffrey
@@ -53,7 +48,8 @@ public class AppWindow  {
         frame.setLayout(new BorderLayout());
         
         frame.setSize(800, 480); // simulate boat screen
-        frame.setUndecorated(true);
+        frame.setUndecorated(false);
+        frame.setResizable(false);
 
         
         tabbedPane = new TabbedContentPane();
@@ -91,7 +87,7 @@ public class AppWindow  {
 //        frame.addWindowListener(new WindowAdapter() {
 //            public void windowClosing(WindowEvent e) {
 //              int confirmed = JOptionPane.showConfirmDialog(null, 
-//                  "Are you sure you want to exit the program?", "Applied Engineering 2023",
+//                  "Are oyu sure you want to exit the program?", "Applied Engineering 2024",
 //                  JOptionPane.YES_NO_OPTION);
 //
 //              if (confirmed == JOptionPane.YES_OPTION) {

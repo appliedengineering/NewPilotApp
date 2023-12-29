@@ -59,6 +59,8 @@ public class DebugDataCalc {
         }
     }
     
+    
+    
     public static void main(String[] args) {
         DebugDataCalc.generateDebugData();
     }

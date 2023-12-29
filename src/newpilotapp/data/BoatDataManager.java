@@ -17,6 +17,7 @@ import newpilotapp.framework.data.MutableLiveData;
  * Think of this like a ViewModel from Android
  * @author Jeffrey
  */
+
 public class BoatDataManager {
     public static MutableLiveData<Boolean> networkStatus = new MutableLiveData<>(false); // true = online, false = offline
     
@@ -24,13 +25,14 @@ public class BoatDataManager {
     public static MutableLiveData<StringBuffer> errorStatus = new MutableLiveData<>(new StringBuffer("--- START OF LOG ---"));
     public static MutableLiveData<Boolean> isDebugDataOn = new MutableLiveData<>(false);
     public static MutableLiveData<Boolean> isStepperCalibrateOn = new MutableLiveData<>(false);
+    public static MutableLiveData<StringBuffer> portData = new MutableLiveData<>(new StringBuffer("No ports connected"));
     
     // Sensor Data
-    public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(); 
+    public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(new CompassDriver.CompassData(20)); 
     public static MutableLiveData<Double> ambientTemp = new MutableLiveData<>();
-    public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.025914, -118.166082, 0));
+    public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>(new GpsDriver.GpsData(0, 0, 0));
     
-    public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.125914, -118.066082, 0)); // testing
+    public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>(new GpsDriver.GpsData(0, 0, 0)); // testing
     
     public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
 
@@ -75,9 +77,6 @@ public class BoatDataManager {
     };
     
     public static String getTitleForDataKey(String key) {
-        
-        
-        
         for(int i = 0; i < DATA_KEYS.length; i++) {
             if(DATA_KEYS[i].equals(key)) return DATA_KEY_TITLES[i];
         }

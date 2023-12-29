@@ -6,6 +6,7 @@ package newpilotapp.drivers;
 
 import com.fazecast.jSerialComm.SerialPort;
 import java.util.Arrays;
+import newpilotapp.data.BoatDataManager;
 import newpilotapp.logging.Console;
 
 /**
@@ -37,15 +38,18 @@ public class SerialDriver extends Driver {
         SerialPort[] availablePorts = SerialPort.getCommPorts();
 
         // use the for loop to print the available serial ports
-        if(isFirst) Console.log("Available Serial Ports");
+        StringBuffer portData = new StringBuffer();
+        portData.append("Available Serial Ports\n\n");
         serialPort = null;
+        
+        
         for(SerialPort s : availablePorts) {
-             if(isFirst) Console.log(s.toString() + " " + s.getSystemPortPath() + " " + s.getPortLocation());
+             portData.append(s.getPortLocation()).append(" ").append(s.getSystemPortPath()).append(" ").append(s.toString()).append("\n");
              if(s.getPortLocation().equals(serialPortName) || s.getSystemPortPath().equals(serialPortName)) {
                 serialPort = s;
              }
-             if(isFirst) System.out.println();
         }
+        BoatDataManager.portData.setValue(portData); // update ports info
         
         if(serialPort == null) {
             if(isFirst) throw new IllegalStateException(String.format("Serial port: %s not found!!! (%s)", serialPortName, this.getClass().getName()));

@@ -33,6 +33,14 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
         sector2bSerial.setSerialPortName(port); // port location
     }
     
+    public CompassDriver(MutableLiveData<CompassData> compassHeading, String port, SerialDriver ser) {
+        this.compassHeading = compassHeading;
+        sector2bSerial = ser;
+        sector2bSerial.setReadTimeout(50);
+        sector2bSerial.setSerialPortName(port); // port location
+        
+    }
+    
     public CompassDriver(MutableLiveData<CompassData> compassHeading, String port, int offset) {
         this(compassHeading, port);
         this.offset = offset;
@@ -71,6 +79,15 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
     public static class CompassData extends SerialData {
         public double compassHeading;
         public int systemCalibration, magneticCalibration;
+
+        public CompassData(double compassHeading) {
+            this.compassHeading = compassHeading;
+        }
+
+        public CompassData() {
+        }
+        
+        
     }
     
 }

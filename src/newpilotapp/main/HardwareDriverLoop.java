@@ -23,32 +23,41 @@ import newpilotapp.logging.Console;
  */
 public class HardwareDriverLoop implements Runnable {
     
-    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, "0-1.3");
-
-    private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, "1-1.4");
+    private SerialDriver compassAndGpsSerial = new SerialDriver();
+    private String compassAndGpsSerialPort = "0-1.3";
     
-    private StepperDriver stepperDriver = new StepperDriver("1-1.2");
+    private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, compassAndGpsSerialPort, compassAndGpsSerial);
+    private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, compassAndGpsSerialPort, compassAndGpsSerial);
+    
+    private StepperDriver stepperDriver = new StepperDriver("0-1.1");
     
     private SerialDriver motorControllerDriver = new SerialDriver();
+    
+    
 
 
     
     public volatile boolean isRunning = false;
     
-    public volatile long runDelay = 10;
+    public volatile long runDelay = 100;
         
     private void init() {
         try {
         compassDriver.init();
-        gpsDriver.init();
-        stepperDriver.init();
-        
-//        motorControllerDriver.setSerialPortName("1-1.2");
-//        motorControllerDriver.init();
-        // sector2aDriver.init();
-
         } catch (Exception e) {
-            // make error visible on display (bc hardware issues need to be resolved physically)
+            Console.error(e.getMessage());
+        }
+        
+        // DO NOT INIT THE GPS DRIVER because the compass driver has already been intialized and they share
+        // a SerialDriver
+//        try {
+//            gpsDriver.init();
+//        } catch (Exception e) {
+//            Console.error(e.getMessage());
+//        }
+        try {
+        stepperDriver.init();
+        } catch (Exception e) {
             Console.error(e.getMessage());
         }
     }
@@ -63,10 +72,11 @@ public class HardwareDriverLoop implements Runnable {
         while(isRunning){
             try {
                 compassDriver.recieveData();
-//                if(System.currentTimeMillis()-gpsLastRead > 500) { // read gps values every second
-//                    gpsDriver.recieveData();
-//                    gpsLastRead = System.currentTimeMillis();
-//                }
+
+                if(System.currentTimeMillis()-gpsLastRead > 500) { // read gps values every second
+                    gpsDriver.recieveData();
+                    gpsLastRead = System.currentTimeMillis();
+                }
                 
 //                SerialData data = motorControllerDriver.recieveData(new byte[0]);
 //                
@@ -79,20 +89,22 @@ public class HardwareDriverLoop implements Runnable {
 //                        BoatDataManager.localGpsData.getValue());
                 
 //                BoatDataManager.telemetryHeading.setValue(headingOffset);
-//                if(BoatDataManager.isStepperCalibrateOn.getValue()) {
-//                    stepperDriver.sendData(45);
-//                } else {
+                if(BoatDataManager.isStepperCalibrateOn.getValue()) {
+                    stepperDriver.sendData(45);
+                } else {
 //                    
 //                    // ex. telemetryHeading = 0
-//                    
-//                    double direction = compassHeading-headingOffset;
-//                    if(direction > 180) direction -= 360;
-//                    stepperDriver.sendData(direction); // stepper motor updates itself based on current conditions
-//                }//sector2aDriver.sendData();    
+
+                if(BoatDataManager.compassHeading.getValue() != null){
+                    
+                    double direction = BoatDataManager.compassHeading.getValue().compassHeading;
+                    stepperDriver.sendData(direction); // stepper motor updates itself based on current conditions
+                }
+                }//sector2aDriver.sendData();    
 
             } catch (Exception e) {
                 // make error visible on display (bc hardware issues need to be resolved physically)
-                // Console.error(e.getMessage());
+//                Console.error(e.getMessage());
             }
 
             try {Thread.sleep(runDelay);} catch (InterruptedException ex) {}

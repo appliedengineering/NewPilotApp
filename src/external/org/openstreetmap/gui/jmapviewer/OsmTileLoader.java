@@ -14,6 +14,10 @@ import java.util.concurrent.*;
 import external.org.openstreetmap.gui.jmapviewer.interfaces.TileJob;
 import external.org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import external.org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 
 /**
  * A {@link TileLoader} implementation that loads tiles from OSM.
@@ -21,6 +25,12 @@ import external.org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
  * @author Jan Peter Stotz
  */
 public class OsmTileLoader implements TileLoader {
+    
+//    private static final String location =  "/home/ae-boatstation/Desktop/MapData/map%d_%d_%d.png";
+    private static String location =  "/Users/Jeffrey/Desktop/MapData/map%d_%d_%d.png";
+
+    private boolean USE_CACHE = false;
+
     
     private static final ThreadPoolExecutor jobDispatcher = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
 
@@ -35,6 +45,7 @@ public class OsmTileLoader implements TileLoader {
 
         @Override
         public void run() {
+            
             synchronized (tile) {
                 if ((tile.isLoaded() && !tile.hasError()) || tile.isLoading())
                     return;
@@ -42,7 +53,19 @@ public class OsmTileLoader implements TileLoader {
                 tile.error = false;
                 tile.loading = true;
             }
-            try {
+            
+            File inputFile = new File(String.format(location, tile.getXtile(), tile.getYtile(), tile.getZoom()));
+            if(inputFile.exists()) {
+                try {
+                    tile.setImage(ImageIO.read(inputFile));
+                    tile.setLoaded(true);
+                    listener.tileLoadingFinished(tile, true);
+                } catch (IOException ex) {
+                    ex.printStackTrace(); // should never run
+                    
+                }
+            } else {
+                try {
                 URLConnection conn = loadTileFromOsm(tile);
                 if (force) {
                     conn.setUseCaches(false);
@@ -54,6 +77,17 @@ public class OsmTileLoader implements TileLoader {
                     input = conn.getInputStream();
                     try {
                         tile.loadImage(input);
+                        if(USE_CACHE){
+                            try{
+                                BufferedImage img = tile.getImage();
+
+                                File outputfile = new File(String.format(location, tile.getXtile(), tile.getYtile(), tile.getZoom()));
+                                ImageIO.write(img, "png", outputfile);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     } finally {
                         input.close();
                         input = null;
@@ -76,6 +110,10 @@ public class OsmTileLoader implements TileLoader {
                 tile.loading = false;
                 tile.setLoaded(true);
             }
+                listener.tileLoadingFinished(tile, false);
+                return;
+            }
+            
         }
 
         @Override

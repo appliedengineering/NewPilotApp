@@ -67,7 +67,6 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
          targetHeadingChart.setPreferredSize(side);
 
                 
-        // GridLayout experimentLayout = new GridLayout(0,3); // 3 columns, rows expand automatically
         this.setLayout(new BorderLayout());
         
         JPanel main = new JPanel();
@@ -80,6 +79,14 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         
         
         BoatDataManager.localGpsData.observe(new LiveDataObserver<GpsDriver.GpsData>() {
+            @Override
+            public void update(GpsDriver.GpsData coordinate) {
+                updateMapDisplay();
+            }
+        
+        });
+        
+        BoatDataManager.remoteGpsData.observe(new LiveDataObserver<GpsDriver.GpsData>() {
             @Override
             public void update(GpsDriver.GpsData coordinate) {
                 updateMapDisplay();
@@ -117,13 +124,14 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
                 if(data == null) {
                     compassHeadingChart.setHasData(false);
                 } else {
-                    System.out.println("hi");
                     compassHeadingChart.setHasData(true);
                     compassHeadingChart.setAngle(data.compassHeading);
                 }
             }
             
         });
+        
+       
         
         BoatDataManager.telemetryHeading.observe(new LiveDataObserver<Double> () {
             @Override
@@ -158,7 +166,7 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         BoatDataManager.remoteGpsData.observe(new LiveDataObserver<GpsDriver.GpsData> () {
             @Override
             public void update(GpsDriver.GpsData data) {
-                if(data == null) {
+                if(data == null || data.lon == 0 || data.lat == 0) {
                     gpsRemoteData.setText("GPS REMOTE: disconnected");
                     return;
                 }
@@ -185,13 +193,22 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         GpsDriver.GpsData local = BoatDataManager.localGpsData.getValue(), 
                 remote = BoatDataManager.remoteGpsData.getValue();
         
-       // treeMap.getViewer().setDisplayPosition(GpsCalc.getCenter(remote, local), 18);
+        GpsDriver.GpsData center = GpsCalc.getCenter(remote, local);
+        
+        treeMap.getViewer().setDisplayPosition(center, 18);
+        
+//        while(treeMap.getViewer().getMapPosition(local, true) == null || treeMap.getViewer().getMapPosition(remote, true) == null) {
+//            treeMap.getViewer().zoomOut();
+//            System.out.println("hey");
+//        }
+//        
         
         MapPolygon path = new MapPolygonImpl(local, remote, local);
         viewer.addMapPolygon(path);
         
         if(local != null) {
             MapMarker localMark = new MapMarkerDot(Color.BLUE, local.lat, local.lon);
+            
             viewer.addMapMarker(localMark);
         }
 
