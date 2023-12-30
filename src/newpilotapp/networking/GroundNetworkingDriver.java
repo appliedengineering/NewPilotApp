@@ -31,14 +31,12 @@ public class GroundNetworkingDriver implements Runnable {
     public static final int PORT = 5555;
     
     private volatile boolean isRunning = false;
-    
-    private ZMQ.Socket alignSocket;
-    
+        
     private Thread alignmentThread;
     
     private final static int    REQUEST_TIMEOUT = 1000;                  //  msecs
     private final static int    REQUEST_RETRIES = 1000;                     //  Before we abandon
-    private final static String SERVER_ENDPOINT = "tcp://localhost:5555";
+    private final static String SERVER_ENDPOINT = "tcp://192.168.1.186:5555";
 
 
     public GroundNetworkingDriver() {
@@ -122,7 +120,7 @@ public class GroundNetworkingDriver implements Runnable {
                         
                         
                         
-                        try{Thread.sleep(1000);}catch(Exception e){}
+                        try{Thread.sleep(250);}catch(Exception e){}
                         
                         retriesLeft = REQUEST_RETRIES;
                         expect_reply = 0;
