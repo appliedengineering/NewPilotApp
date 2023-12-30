@@ -34,6 +34,7 @@ public class BoatNetworkingDriver implements Runnable {
     
     public static final byte REQUEST_ALIGNMENT = 0x01;
     public static final byte REQUEST_DATA = 0x11;
+
     public static final byte[] REQUEST_DATA_ARR = new byte[]{0x11};
 
 

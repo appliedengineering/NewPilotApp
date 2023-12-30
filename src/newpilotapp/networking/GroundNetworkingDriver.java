@@ -110,31 +110,40 @@ public class GroundNetworkingDriver implements Runnable {
                         if(alignment){
                             GpsDriver.GpsData gps = BoatNetworkingDriver.parseAlignmentReply(reply);
                             BoatDataManager.remoteGpsData.setValue(gps);
+                            System.out.println(
+                                "I: got alignment"
+                            );
                         } else {
                             parseTelemetryData(reply);
+                            System.out.println(
+                                "I: got telemetry"
+                            );
                         }
                         
-                        System.out.println(
-                                "I: got reply"
-                            );
+                        
                         
                         try{Thread.sleep(1000);}catch(Exception e){}
                         
                         retriesLeft = REQUEST_RETRIES;
                         expect_reply = 0;
                         alignment =! alignment;
+                        BoatDataManager.networkStatus.setValue(true);
+
 
                     }
                     else if (--retriesLeft == 0) {
                         System.out.println(
                             "E: server seems to be offline, abandoning\n"
                         );
+                        BoatDataManager.networkStatus.setValue(false);
                         break;
                     }
                     else {
                         System.out.println(
                             "W: no response from server, retrying\n"
                         );
+                        BoatDataManager.networkStatus.setValue(false);
+
                         //  Old socket is confused; close it and open a new one
                         poller.unregister(client);
                         ctx.destroySocket(client);

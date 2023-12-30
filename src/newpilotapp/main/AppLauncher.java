@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import newpilotapp.data.BoatDataManager;
 import newpilotapp.networking.GroundNetworkingDriver;
 import newpilotapp.gui.AppWindow;
 import newpilotapp.networking.BoatNetworkingDriver;
@@ -55,6 +56,8 @@ public class AppLauncher {
         if(!args[0].equals("run")) {
             return;
         }
+        
+        BoatDataManager.loadAllProperties();
 
         FlatLightLaf.setup();
         
@@ -75,9 +78,11 @@ public class AppLauncher {
         
         if(args.length == 2) {
             if(args[1].equals("boatNetwork")){
+                BoatDataManager.isBoatstationMode = true;
                 boatAlignmentNetworking = new BoatNetworkingDriver();
                 boatAlignmentNetworking.start();
             } else if(args[1].equals("groundNetwork")){
+                BoatDataManager.isBoatstationMode = false;
                 groundAlignmentNetworking = new GroundNetworkingDriver();
                 groundAlignmentNetworking.start();
             }

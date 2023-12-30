@@ -44,7 +44,12 @@ public class StatusBar extends JPanel {
         vitals.setOpaque(false);
         add(vitals, BorderLayout.EAST);
         
-        JLabel label = new JLabel("Applied Engineering 2024");
+        JLabel label;
+        if(BoatDataManager.isBoatstationMode) {
+            label = new JLabel("Boatstation | Applied Engineering 2024");
+        }else{
+            label = new JLabel("Groundstation | Applied Engineering 2024");
+        }
         label.setForeground(Color.white);
         add(label, BorderLayout.WEST);
         

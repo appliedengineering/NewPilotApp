@@ -29,6 +29,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.CompassDriver;
 import newpilotapp.drivers.GpsCalc;
@@ -55,6 +56,8 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
     private JMapViewer viewer;
     
     public JButton zoomIn, zoomOut;
+    
+    private boolean trackingEnabled = false;
     
 
     
@@ -93,9 +96,27 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
             }
         
         });
-
+        
         
         // testing
+        
+        JPanel buttons = new JPanel();
+        JToggleButton tracking = new JToggleButton("Tracking OFF");
+        tracking.addActionListener(new ActionListener(){
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 trackingEnabled = !trackingEnabled;
+                 if(trackingEnabled) {
+                     tracking.setText("Tracking ON");
+                 } else {
+                     tracking.setText("Tracking OFF");
+                 }
+                 updateMapDisplay();
+
+             }
+            
+        });
+        buttons.add(tracking);
         
         JPanel charts = new JPanel();
         charts.setLayout(new BorderLayout());
@@ -104,6 +125,7 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         
         charts.add(compassHeadingChart, BorderLayout.NORTH);
         charts.add(targetHeadingChart, BorderLayout.SOUTH);
+        charts.add(buttons, BorderLayout.CENTER);
         
         main.add(charts, BorderLayout.WEST);
         main.add(treeMap, BorderLayout.CENTER);
@@ -193,9 +215,20 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         GpsDriver.GpsData local = BoatDataManager.localGpsData.getValue(), 
                 remote = BoatDataManager.remoteGpsData.getValue();
         
-        GpsDriver.GpsData center = GpsCalc.getCenter(remote, local);
+        if(local != null) {
+            if(local.lat == 0 || local.lon == 0) local = null;
+        }
+        if(remote != null) {
+            if(remote.lat == 0 || remote.lon == 0) local = null;
+        }
         
-        treeMap.getViewer().setDisplayPosition(center, 18);
+
+        if(trackingEnabled){
+            if(remote != null && local != null){
+                GpsDriver.GpsData center = GpsCalc.getCenter(remote, local);
+                treeMap.getViewer().setDisplayPosition(center, treeMap.getViewer().getZoom());
+            }
+        }
         
 //        while(treeMap.getViewer().getMapPosition(local, true) == null || treeMap.getViewer().getMapPosition(remote, true) == null) {
 //            treeMap.getViewer().zoomOut();
@@ -216,7 +249,7 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
             MapMarker remoteMark = new MapMarkerDot(Color.RED, remote.lat, remote.lon);
             viewer.addMapMarker(remoteMark);
         }
-
+        
 
 
     }

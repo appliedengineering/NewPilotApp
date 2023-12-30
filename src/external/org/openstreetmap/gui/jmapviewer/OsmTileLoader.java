@@ -16,8 +16,11 @@ import external.org.openstreetmap.gui.jmapviewer.interfaces.TileLoader;
 import external.org.openstreetmap.gui.jmapviewer.interfaces.TileLoaderListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
+import newpilotapp.cache.CacheAccess;
 
 /**
  * A {@link TileLoader} implementation that loads tiles from OSM.
@@ -27,9 +30,9 @@ import javax.imageio.ImageIO;
 public class OsmTileLoader implements TileLoader {
     
 //    private static final String location =  "/home/ae-boatstation/Desktop/MapData/map%d_%d_%d.png";
-    private static String location =  "/Users/Jeffrey/Desktop/MapData/map%d_%d_%d.png";
+    private static String location =  "map%d_%d_%d.png";
 
-    private boolean USE_CACHE = false;
+    private boolean USE_CACHE = true;
 
     
     private static final ThreadPoolExecutor jobDispatcher = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
@@ -54,7 +57,11 @@ public class OsmTileLoader implements TileLoader {
                 tile.loading = true;
             }
             
-            File inputFile = new File(String.format(location, tile.getXtile(), tile.getYtile(), tile.getZoom()));
+            String loc = String.format(location, tile.getXtile(), tile.getYtile(), tile.getZoom());
+            URL url = CacheAccess.class.getResource("MapData");
+            Path filePath = Paths.get(url.getPath(), loc);
+            File inputFile = filePath.toFile();
+            System.out.println(inputFile);
             if(inputFile.exists()) {
                 try {
                     tile.setImage(ImageIO.read(inputFile));
@@ -80,9 +87,9 @@ public class OsmTileLoader implements TileLoader {
                         if(USE_CACHE){
                             try{
                                 BufferedImage img = tile.getImage();
+                                            System.out.println("write");
 
-                                File outputfile = new File(String.format(location, tile.getXtile(), tile.getYtile(), tile.getZoom()));
-                                ImageIO.write(img, "png", outputfile);
+                                ImageIO.write(img, "png", inputFile);
 
                             } catch (IOException e) {
                                 e.printStackTrace();

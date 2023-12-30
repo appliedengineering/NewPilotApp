@@ -4,12 +4,21 @@
  */
 package newpilotapp.data;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.drivers.CompassDriver;
 import newpilotapp.framework.data.MutableLiveData;
+import newpilotapp.logging.Console;
 
 /**
  * All data displayed on the screen will be based on this data, this allows for
@@ -19,6 +28,10 @@ import newpilotapp.framework.data.MutableLiveData;
  */
 
 public class BoatDataManager {
+    
+    public static boolean isBoatstationMode = true; // true=boatstation, false=groundstation
+
+    
     public static MutableLiveData<Boolean> networkStatus = new MutableLiveData<>(false); // true = online, false = offline
     
     // GUI
@@ -30,9 +43,9 @@ public class BoatDataManager {
     // Sensor Data
     public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(new CompassDriver.CompassData(20)); 
     public static MutableLiveData<Double> ambientTemp = new MutableLiveData<>();
-    public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>(new GpsDriver.GpsData(0, 0, 0));
+    public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.126914, -118.066082, 0));
     
-    public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>(new GpsDriver.GpsData(0, 0, 0)); // testing
+    public static MutableLiveData<GpsDriver.GpsData> remoteGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.125914, -118.066082, 0)); // testing
     
     public static MutableLiveData<Double> telemetryHeading = new MutableLiveData<>(0d);
 
@@ -91,4 +104,68 @@ public class BoatDataManager {
         return false;
     }
     
+    
+    // PROPERTIES
+    
+    // Port Settings (MUST NOT BE NULL)
+    public static MutableLiveData<String> portCompassAndGps = new MutableLiveData<>("");
+    public static MutableLiveData<String> portStepper = new MutableLiveData<>("");
+    public static MutableLiveData<String> portBoatstationElecData = new MutableLiveData<>("");
+    
+    
+    public static void loadAllProperties(){
+        FileInputStream inputStream = null;
+        try {
+            String path = isBoatstationMode ? "boatSettings.properties" : "groundSettings.properties";
+            URL url = BoatDataManager.class.getResource(path);
+            inputStream = new FileInputStream(url.getPath());
+            Properties props = new Properties();
+            props.load(inputStream);
+            portCompassAndGps.setValue(props.getProperty("portCompassAndGps"));
+            portStepper.setValue(props.getProperty("portStepper"));
+            portBoatstationElecData.setValue(props.getProperty("portBoatstationElecData"));
+            
+            Console.log("Settings Loaded!");
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if(inputStream != null)
+                inputStream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    public static void saveAllProperties(){
+        FileOutputStream outputStream = null;
+        try {
+            Properties props = new Properties();
+            props.put("portCompassAndGps", portCompassAndGps.getValue());
+            props.put("portStepper", portStepper.getValue());
+            props.put("portBoatstationElecData", portBoatstationElecData.getValue());
+            
+            String path = isBoatstationMode ? "boatSettings.properties" : "groundSettings.properties";
+            URL url = BoatDataManager.class.getResource(path);
+
+            outputStream = new FileOutputStream(url.getPath());
+            //Storing the properties file
+            props.store(outputStream, "Program Settings");
+            Console.log("Settings Saved!");
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if(outputStream != null)
+                outputStream.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 }

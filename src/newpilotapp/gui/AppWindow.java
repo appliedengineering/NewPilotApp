@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
@@ -50,7 +52,9 @@ public class AppWindow  {
         frame.setSize(800, 480); // simulate boat screen
         frame.setUndecorated(false);
         frame.setResizable(false);
-
+        
+        ImageIcon ico = new ImageIcon(this.getClass().getResource("logo.png"));
+        frame.setIconImage(ico.getImage());
         
         tabbedPane = new TabbedContentPane();
         

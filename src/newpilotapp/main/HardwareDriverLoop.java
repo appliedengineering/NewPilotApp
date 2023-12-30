@@ -24,12 +24,12 @@ import newpilotapp.logging.Console;
 public class HardwareDriverLoop implements Runnable {
     
     private SerialDriver compassAndGpsSerial = new SerialDriver();
-    private String compassAndGpsSerialPort = "0-1.3";
+    private String compassAndGpsSerialPort = BoatDataManager.portCompassAndGps.getValue();
     
     private CompassDriver compassDriver = new CompassDriver(BoatDataManager.compassHeading, compassAndGpsSerialPort, compassAndGpsSerial);
     private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, compassAndGpsSerialPort, compassAndGpsSerial);
     
-    private StepperDriver stepperDriver = new StepperDriver("0-1.1");
+    private StepperDriver stepperDriver = new StepperDriver(BoatDataManager.portStepper.getValue());
     
     private SerialDriver motorControllerDriver = new SerialDriver();
     

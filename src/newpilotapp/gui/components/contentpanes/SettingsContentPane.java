@@ -5,8 +5,12 @@
 package newpilotapp.gui.components.contentpanes;
 
 import java.awt.BorderLayout;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import newpilotapp.data.BoatDataManager;
+import newpilotapp.framework.data.MutableLiveData;
 import newpilotapp.gui.TabbedContentPane.ContentPane;
 import newpilotapp.gui.components.SettingsPanel;
 
@@ -19,7 +23,7 @@ public class SettingsContentPane extends ContentPane {
     private JPanel settingsPanel;
     
     // panels by settings type
-    private SettingsPanel networkingPanel;
+    private SettingsPanel portPanel;
     private SettingsPanel compassOffsetPanel;
     
     public SettingsContentPane() {
@@ -29,14 +33,26 @@ public class SettingsContentPane extends ContentPane {
         settingsPanel.setLayout(new BoxLayout(settingsPanel, BoxLayout.Y_AXIS));
         this.add(settingsPanel, BorderLayout.NORTH);
         
-        networkingPanel = new SettingsPanel("Network Settings", null);
+        Map<String, MutableLiveData<String>> portSettings = new HashMap<>();
         
-        compassOffsetPanel = new SettingsPanel("Compass Offsets", null);
+        portSettings.put("Compass and GPS port", BoatDataManager.portCompassAndGps);
+        portSettings.put("Stepper Driver port", BoatDataManager.portStepper);
+        portSettings.put("Elec Data Boatstation port", BoatDataManager.portBoatstationElecData);
 
-        settingsPanel.add(networkingPanel);
-        settingsPanel.add(compassOffsetPanel);
+
+        
+        
+
+        
+        portPanel = new SettingsPanel("Port Settings", portSettings);
+        
+//        compassOffsetPanel = new SettingsPanel("Compass Offsets", null);
+
+        settingsPanel.add(portPanel);
+//        settingsPanel.add(compassOffsetPanel);
         
 
     }
+    
     
 }
