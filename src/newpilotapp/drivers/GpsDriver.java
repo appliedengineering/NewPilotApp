@@ -20,7 +20,7 @@ public class GpsDriver { // part of Sector2a
     
     private MutableLiveData<GpsData> localGpsData;
     
-    SerialDriver gpsSerial = new SerialDriver();
+    SerialDriver gpsSerial;
 
     public GpsDriver(MutableLiveData<GpsData> localGpsData, String port) {
         this.localGpsData = localGpsData;

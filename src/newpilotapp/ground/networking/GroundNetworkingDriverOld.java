@@ -27,11 +27,11 @@ import newpilotapp.networking.BoatNetworkingDriver;
  *  Check this:
  * https://zguide.zeromq.org/docs/chapter4/#Client-Side-Reliability-Lazy-Pirate-Pattern
  */
-public class GroundNetworkingDriver implements Runnable {
+public class GroundNetworkingDriverOld implements Runnable {
     
     private final static int    REQUEST_TIMEOUT = 1000;                  //  msecs
     private final static int    REQUEST_RETRIES = 10; // Integer.MAX_VALUE;     //  retry infinitely
-    private final static String SERVER_ENDPOINT = "tcp://169.254.225.222:5555";
+    private final static String SERVER_ENDPOINT = "tcp://ae-boat.local:5555";
     
     public volatile long runDelay = 1000;
 

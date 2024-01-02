@@ -24,7 +24,7 @@ public class SettingsContentPane extends ContentPane {
     
     // panels by settings type
     private SettingsPanel portPanel;
-    private SettingsPanel compassOffsetPanel;
+    private SettingsPanel networkPanel;
     
     public SettingsContentPane() {
         this.setLayout(new BorderLayout());
@@ -38,6 +38,10 @@ public class SettingsContentPane extends ContentPane {
         portSettings.put("Compass and GPS port", BoatDataManager.portCompassAndGps);
         portSettings.put("Stepper Driver port", BoatDataManager.portStepper);
         portSettings.put("Elec Data Boatstation port", BoatDataManager.portBoatstationElecData);
+        
+        Map<String, MutableLiveData<String>> networkSettings = new HashMap<>();
+        
+        networkSettings.put("Boatstation Address (ex. 192.168.1.23, ae-boat.local)", BoatDataManager.networkBoatAddress);
 
 
         
@@ -45,10 +49,13 @@ public class SettingsContentPane extends ContentPane {
 
         
         portPanel = new SettingsPanel("Port Settings", portSettings);
+        networkPanel = new SettingsPanel("Network Settings", networkSettings);
+
         
 //        compassOffsetPanel = new SettingsPanel("Compass Offsets", null);
 
         settingsPanel.add(portPanel);
+        settingsPanel.add(networkPanel);
 //        settingsPanel.add(compassOffsetPanel);
         
 

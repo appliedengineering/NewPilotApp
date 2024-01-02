@@ -46,7 +46,7 @@ public class AppWindow  {
     }
 
     public void showFrame() {
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
         
         frame.setSize(800, 480); // simulate boat screen

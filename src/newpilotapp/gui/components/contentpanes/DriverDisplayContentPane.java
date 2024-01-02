@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.framework.data.LiveDataObserver;
 import newpilotapp.gui.TabbedContentPane.ContentPane;
@@ -37,28 +38,34 @@ public class DriverDisplayContentPane extends ContentPane {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        g.setColor(Color.BLACK);
+        Graphics2D g2 = (Graphics2D) g;
+        
+        RenderingHints rh = new RenderingHints(
+             RenderingHints.KEY_ANTIALIASING,
+             RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHints(rh);
+        
+        g2.setColor(Color.BLACK);
         int r = getWidth()/3;
         int border = 20;
-        g.fillOval(getWidth()/2 - r/2, 0, r, r);
-        g.setColor(Color.WHITE);
-        g.fillOval(getWidth()/2 - (r-border)/2, border/2, (r-border), (r-border));
+        g2.fillOval(getWidth()/2 - r/2, 0, r, r);
+        g2.setColor(Color.WHITE);
+        g2.fillOval(getWidth()/2 - (r-border)/2, border/2, (r-border), (r-border));
         
-        g.setColor(Color.BLACK);
-        g.fillOval(getWidth()/2 - r*3/2, 0, r, r);
-        g.setColor(Color.WHITE);
-        g.fillOval(getWidth()/2 - (r-border/3)*3/2, border/2, (r-border), (r-border));
+        g2.setColor(Color.BLACK);
+        g2.fillOval(getWidth()/2 - r*3/2, 0, r, r);
+        g2.setColor(Color.WHITE);
+        g2.fillOval(getWidth()/2 - (r-border/3)*3/2, border/2, (r-border), (r-border));
         
-        g.setColor(Color.BLACK);
-        g.fillOval(getWidth()/2 + r/2, 0, r, r);
-        g.setColor(Color.WHITE);
-        g.fillOval(getWidth()/2 + (r+border)/2, border/2, (r-border), (r-border));
+        g2.setColor(Color.BLACK);
+        g2.fillOval(getWidth()/2 + r/2, 0, r, r);
+        g2.setColor(Color.WHITE);
+        g2.fillOval(getWidth()/2 + (r+border)/2, border/2, (r-border), (r-border));
         
-        Graphics2D g2 = (Graphics2D) g;
         
         g2.setFont(boldFont);
         
-        g2.setStroke(new BasicStroke(border));
+        g2.setStroke(new BasicStroke(border, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         
         
         

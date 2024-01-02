@@ -16,7 +16,7 @@ import newpilotapp.logging.Console;
 public class CompassDriver { // for sector2b, labeled on the diagram in the software folder
     
     
-    SerialDriver sector2bSerial = new SerialDriver();
+    SerialDriver sector2bSerial;
     
     private CompassData compassData = new CompassData();
     

@@ -57,6 +57,12 @@ public class AppLauncher {
             return;
         }
         
+        if(args[1].equals("boatNetwork")){
+                BoatDataManager.isBoatstationMode = true;
+            } else if(args[1].equals("groundNetwork")){
+                BoatDataManager.isBoatstationMode = false;
+            }
+        
         BoatDataManager.loadAllProperties();
 
         FlatLightLaf.setup();

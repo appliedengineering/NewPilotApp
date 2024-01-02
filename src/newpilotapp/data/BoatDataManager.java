@@ -4,10 +4,12 @@
  */
 package newpilotapp.data;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,8 @@ public class BoatDataManager {
     public static MutableLiveData<StringBuffer> portData = new MutableLiveData<>(new StringBuffer("No ports connected"));
     
     // Sensor Data
+    public static MutableLiveData<Double> battVoltage = new MutableLiveData<>(0.0);
+
     public static MutableLiveData<CompassDriver.CompassData> compassHeading = new MutableLiveData<>(new CompassDriver.CompassData(20)); 
     public static MutableLiveData<Double> ambientTemp = new MutableLiveData<>();
     public static MutableLiveData<GpsDriver.GpsData> localGpsData = new MutableLiveData<>(new GpsDriver.GpsData(34.126914, -118.066082, 0));
@@ -111,22 +115,27 @@ public class BoatDataManager {
     public static MutableLiveData<String> portCompassAndGps = new MutableLiveData<>("");
     public static MutableLiveData<String> portStepper = new MutableLiveData<>("");
     public static MutableLiveData<String> portBoatstationElecData = new MutableLiveData<>("");
+    public static MutableLiveData<String> networkBoatAddress = new MutableLiveData<>("");
+
     
     
     public static void loadAllProperties(){
-        FileInputStream inputStream = null;
+        InputStream inputStream = null;
         try {
             String path = isBoatstationMode ? "boatSettings.properties" : "groundSettings.properties";
-            URL url = BoatDataManager.class.getResource(path);
-            inputStream = new FileInputStream(url.getPath());
+            inputStream = new FileInputStream(path);
             Properties props = new Properties();
             props.load(inputStream);
             portCompassAndGps.setValue(props.getProperty("portCompassAndGps"));
             portStepper.setValue(props.getProperty("portStepper"));
             portBoatstationElecData.setValue(props.getProperty("portBoatstationElecData"));
+            networkBoatAddress.setValue(props.getProperty("networkBoatAddress"));
+
             
             Console.log("Settings Loaded!");
         } catch (FileNotFoundException ex) {
+            Console.log("Settings Not Found!");
+
             ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -147,11 +156,13 @@ public class BoatDataManager {
             props.put("portCompassAndGps", portCompassAndGps.getValue());
             props.put("portStepper", portStepper.getValue());
             props.put("portBoatstationElecData", portBoatstationElecData.getValue());
+            props.put("networkBoatAddress", networkBoatAddress.getValue());
+
             
             String path = isBoatstationMode ? "boatSettings.properties" : "groundSettings.properties";
-            URL url = BoatDataManager.class.getResource(path);
+           
 
-            outputStream = new FileOutputStream(url.getPath());
+            outputStream = new FileOutputStream(path);
             //Storing the properties file
             props.store(outputStream, "Program Settings");
             Console.log("Settings Saved!");

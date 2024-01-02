@@ -36,7 +36,9 @@ public class GroundNetworkingDriver implements Runnable {
     
     private final static int    REQUEST_TIMEOUT = 1000;                  //  msecs
     private final static int    REQUEST_RETRIES = 1000;                     //  Before we abandon
-    private final static String SERVER_ENDPOINT = "tcp://192.168.1.186:5555";
+    private final static String SERVER_ENDPOINT_FORMAT = "tcp://%s:5555";
+    
+    private String SERVER_ENDPOINT;
 
 
     public GroundNetworkingDriver() {
@@ -66,6 +68,7 @@ public class GroundNetworkingDriver implements Runnable {
             System.out.println("I: connecting to server");
             ZMQ.Socket client = ctx.createSocket(SocketType.REQ);
             assert (client != null);
+            SERVER_ENDPOINT = String.format(SERVER_ENDPOINT_FORMAT, BoatDataManager.networkBoatAddress.getValue());
             client.connect(SERVER_ENDPOINT);
 
             ZMQ.Poller poller = ctx.createPoller(1);

@@ -101,6 +101,8 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         // testing
         
         JPanel buttons = new JPanel();
+        buttons.setLayout(new BorderLayout());
+        
         JToggleButton tracking = new JToggleButton("Tracking OFF");
         tracking.addActionListener(new ActionListener(){
              @Override
@@ -116,7 +118,11 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
              }
             
         });
-        buttons.add(tracking);
+        buttons.add(tracking, BorderLayout.NORTH);
+        JPanel controls = new JPanel();
+        
+        setUpMapControls(controls);
+        buttons.add(controls, BorderLayout.CENTER);
         
         JPanel charts = new JPanel();
         charts.setLayout(new BorderLayout());
@@ -227,7 +233,12 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
             if(remote != null && local != null){
                 GpsDriver.GpsData center = GpsCalc.getCenter(remote, local);
                 treeMap.getViewer().setDisplayPosition(center, treeMap.getViewer().getZoom());
+            } else if(remote != null && local == null){
+                treeMap.getViewer().setDisplayPosition(remote, treeMap.getViewer().getZoom());
+            } else if(remote == null && local != null){
+                treeMap.getViewer().setDisplayPosition(local, treeMap.getViewer().getZoom());
             }
+            
         }
         
 //        while(treeMap.getViewer().getMapPosition(local, true) == null || treeMap.getViewer().getMapPosition(remote, true) == null) {
@@ -266,11 +277,12 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
     }
 
     private void setUpMapControls(JPanel panel) {
+        panel.setLayout(new BorderLayout());
         zoomIn = new JButton("Zoom In");
         zoomOut = new JButton("Zoom Out");
         
-        panel.add(zoomIn, BorderLayout.NORTH);
-        panel.add(zoomOut, BorderLayout.SOUTH);
+        panel.add(zoomIn, BorderLayout.WEST);
+        panel.add(zoomOut, BorderLayout.EAST);
         
         
         zoomIn.addActionListener((ActionEvent e) -> {

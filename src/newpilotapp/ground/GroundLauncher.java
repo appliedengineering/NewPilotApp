@@ -4,7 +4,7 @@
  */
 package newpilotapp.ground;
 
-import newpilotapp.ground.networking.GroundNetworkingDriver;
+import newpilotapp.ground.networking.GroundNetworkingDriverOld;
 
 /**
  *
@@ -25,7 +25,7 @@ public class GroundLauncher {
         Thread groundThread = new Thread(main);
         groundThread.start();
         
-        GroundNetworkingDriver networking = new GroundNetworkingDriver();
+        GroundNetworkingDriverOld networking = new GroundNetworkingDriverOld();
         Thread networkingThread = new Thread(networking);
         networkingThread.start();
     }

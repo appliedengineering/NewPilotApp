@@ -30,7 +30,7 @@ public class StatusBar extends JPanel {
     private JLabel networkStatusLabel;
     private JLabel debugStatusLabel;
     private JLabel heapStatusLabel;
-    private JLabel stepperCalibrateLabel;
+    private JLabel battLabel;
     private JPanel vitals;
 
     public StatusBar() {
@@ -67,13 +67,13 @@ public class StatusBar extends JPanel {
         heapStatusLabel  = new JLabel();
         heapStatusLabel.setForeground(Color.white);
         
-        stepperCalibrateLabel = new JLabel();
-        stepperCalibrateLabel.setForeground(Color.white);
+        battLabel = new JLabel();
+        battLabel.setForeground(Color.white);
         
         // add(currentStatusLabel, BorderLayout.CENTER);
 
   
-        vitals.add(stepperCalibrateLabel);
+        vitals.add(battLabel);
         vitals.add(Box.createRigidArea(new Dimension(8,0))); 
         vitals.add(debugStatusLabel);
         vitals.add(Box.createRigidArea(new Dimension(8,0))); 
@@ -133,14 +133,16 @@ public class StatusBar extends JPanel {
         }
         );
         
-        BoatDataManager.isStepperCalibrateOn.observe(new LiveDataObserver<Boolean>() {
+        BoatDataManager.battVoltage.observe(new LiveDataObserver<Double>() {
             @Override
-            public void update(Boolean stepper) {
-                if(stepper) {
-                    stepperCalibrateLabel.setText("Stepper Calibrate ON");
+            public void update(Double stepper) {
+                
+                if(stepper == -1.0) {
+                    battLabel.setText("Battery Error");
                 } else {
-                    stepperCalibrateLabel.setText("Stepper Calibrate OFF");
+                    battLabel.setText(stepper+" V");
                 }
+                
             }
         
         }
@@ -168,7 +170,7 @@ public class StatusBar extends JPanel {
 
         });
         
-        stepperCalibrateLabel.addMouseListener(new MouseListener(){
+        battLabel.addMouseListener(new MouseListener(){
             @Override
             public void mouseClicked(MouseEvent e) {
                 BoatDataManager.isStepperCalibrateOn.setValue(!BoatDataManager.isStepperCalibrateOn.getValue());

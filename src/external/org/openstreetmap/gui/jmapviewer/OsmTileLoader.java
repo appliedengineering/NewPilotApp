@@ -32,7 +32,7 @@ public class OsmTileLoader implements TileLoader {
 //    private static final String location =  "/home/ae-boatstation/Desktop/MapData/map%d_%d_%d.png";
     private static String location =  "map%d_%d_%d.png";
 
-    private boolean USE_CACHE = true;
+    private boolean USE_CACHE = false;
 
     
     private static final ThreadPoolExecutor jobDispatcher = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
@@ -57,21 +57,21 @@ public class OsmTileLoader implements TileLoader {
                 tile.loading = true;
             }
             
-            String loc = String.format(location, tile.getXtile(), tile.getYtile(), tile.getZoom());
-            URL url = CacheAccess.class.getResource("MapData");
-            Path filePath = Paths.get(url.getPath(), loc);
-            File inputFile = filePath.toFile();
-            System.out.println(inputFile);
-            if(inputFile.exists()) {
-                try {
-                    tile.setImage(ImageIO.read(inputFile));
-                    tile.setLoaded(true);
-                    listener.tileLoadingFinished(tile, true);
-                } catch (IOException ex) {
-                    ex.printStackTrace(); // should never run
-                    
-                }
-            } else {
+//            String loc = String.format(location, tile.getXtile(), tile.getYtile(), tile.getZoom());
+//            URL url = CacheAccess.class.getResource("MapData");
+//            Path filePath = Paths.get(url.getPath(), loc);
+//            File inputFile = filePath.toFile();
+//            System.out.println(inputFile);
+//            if(inputFile.exists()) {
+//                try {
+//                    tile.setImage(ImageIO.read(inputFile));
+//                    tile.setLoaded(true);
+//                    listener.tileLoadingFinished(tile, true);
+//                } catch (IOException ex) {
+//                    ex.printStackTrace(); // should never run
+//                    
+//                }
+//            } else {
                 try {
                 URLConnection conn = loadTileFromOsm(tile);
                 if (force) {
@@ -84,17 +84,17 @@ public class OsmTileLoader implements TileLoader {
                     input = conn.getInputStream();
                     try {
                         tile.loadImage(input);
-                        if(USE_CACHE){
-                            try{
-                                BufferedImage img = tile.getImage();
-                                            System.out.println("write");
-
-                                ImageIO.write(img, "png", inputFile);
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
+//                        if(USE_CACHE){
+//                            try{
+//                                BufferedImage img = tile.getImage();
+//                                            System.out.println("write");
+//
+//                                ImageIO.write(img, "png", inputFile);
+//
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
                     } finally {
                         input.close();
                         input = null;
@@ -117,9 +117,8 @@ public class OsmTileLoader implements TileLoader {
                 tile.loading = false;
                 tile.setLoaded(true);
             }
-                listener.tileLoadingFinished(tile, false);
-                return;
-            }
+                
+//            }
             
         }
 
