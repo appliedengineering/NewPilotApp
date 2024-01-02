@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.framework.data.MutableLiveData;
@@ -56,6 +57,9 @@ public class SettingsContentPane extends ContentPane {
 
         settingsPanel.add(portPanel);
         settingsPanel.add(networkPanel);
+        JLabel warning = new JLabel("Restart app after changes!!!");
+        settingsPanel.add(warning);
+
 //        settingsPanel.add(compassOffsetPanel);
         
 
