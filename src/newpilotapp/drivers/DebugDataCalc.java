@@ -37,7 +37,7 @@ public class DebugDataCalc {
                 }
                 
                 lastPoint = new DataPoint();
-                lastPoint.valueDouble = Math.random()*100d;
+                lastPoint.valueDouble = Math.min(100, Math.max(0, Math.sin(System.currentTimeMillis()/5000.+i*1000)*50 + 50 + (0.5-Math.random())*50d));
                 lastPoint.valueBool = Math.random() > 0.5d;
                 
                 points.add(lastPoint);

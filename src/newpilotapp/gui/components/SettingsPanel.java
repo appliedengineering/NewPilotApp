@@ -47,7 +47,7 @@ public class SettingsPanel extends JPanel {
             if(liveData.getValue() != null){
                 textField.setText(liveData.getValue() );
             }
-            
+                        
             JButton btn = new JButton("Save");
             
             btn.addActionListener(new ActionListener(){

@@ -7,10 +7,16 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.OceanTheme;
 import newpilotapp.gui.components.StatusBar;
 import newpilotapp.gui.components.contentpanes.DataContentPane;
 import newpilotapp.gui.components.contentpanes.DebugContentPane;
@@ -42,7 +48,6 @@ public class AppWindow  {
     
     public AppWindow() {
         frame = new JFrame();
-                
     }
 
     public void showFrame() {

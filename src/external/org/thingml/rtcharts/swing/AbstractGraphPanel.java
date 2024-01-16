@@ -47,7 +47,7 @@ abstract public class AbstractGraphPanel extends javax.swing.JPanel {
     }
     
     protected static Color dark = new java.awt.Color(31, 31, 31);
-    protected static Color bright = new java.awt.Color(220, 220, 220);
+    protected static Color bright = new java.awt.Color(255, 255, 255);
 
     protected static JColorChooser cchooser = new JColorChooser();
     

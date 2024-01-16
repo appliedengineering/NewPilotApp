@@ -7,6 +7,8 @@ package newpilotapp.gui.components.chart;
 import external.org.thingml.rtcharts.swing.BarGraphPanel;
 import external.org.thingml.rtcharts.swing.GraphBuffer;
 import external.org.thingml.rtcharts.swing.GraphPanel;
+import external.org.thingml.rtcharts.swing.LineGraphPanel;
+import external.org.thingml.rtcharts.swing.NewLineGraphPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -28,7 +30,7 @@ public class LineChartPanel extends JPanel {
 
     
     public LineChartPanel(String title) {
-        graphPanel = new BarGraphPanel(graphBuffer, title, -100, 100, 25, Color.BLUE);
+        graphPanel = new NewLineGraphPanel(graphBuffer, title, -10, 100, 25, Color.BLUE);
         graphPanel.setBrightBackground();
         titleLabel = new JLabel();
         
