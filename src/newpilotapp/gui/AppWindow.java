@@ -55,8 +55,8 @@ public class AppWindow  {
         frame.setLayout(new BorderLayout());
         
         frame.setSize(800, 480); // simulate boat screen
-        frame.setUndecorated(false);
-        frame.setResizable(false);
+//        frame.setUndecorated(true);
+//        frame.setResizable(false);
         
         ImageIcon ico = new ImageIcon(this.getClass().getResource("logo.png"));
         frame.setIconImage(ico.getImage());

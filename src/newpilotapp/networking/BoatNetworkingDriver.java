@@ -125,10 +125,14 @@ public class BoatNetworkingDriver implements Runnable {
             double lat = unpacker.unpackDouble();
             double lon = unpacker.unpackDouble();
             double speed = unpacker.unpackDouble();
+            double volt = unpacker.unpackDouble();
+
 
             data.lat = lat;
             data.lon = lon;
             data.speed = speed;
+           
+            BoatDataManager.elecVoltage.setValue(volt);
 
         }catch(IOException e) {
             Console.error("Failed to unpack alignment data");
@@ -151,15 +155,17 @@ public class BoatNetworkingDriver implements Runnable {
 
             GpsDriver.GpsData gps = BoatDataManager.localGpsData.getValue();
             
-            if(gps == null) {
+            if(gps == null || BoatDataManager.elecVoltage == null) {
                 packer.packDouble(0); // latitude
                 packer.packDouble(0); // longitude
+                packer.packDouble(0); // speed
                 packer.packDouble(0); // speed
 
             } else {
                 packer.packDouble(gps.lat); // latitude
                 packer.packDouble(gps.lon); // longitude
                 packer.packDouble(gps.speed); // speed
+                packer.packDouble(BoatDataManager.elecVoltage.getValue()); // speed
 
             }
             

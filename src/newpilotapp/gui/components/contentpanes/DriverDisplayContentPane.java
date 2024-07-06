@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import newpilotapp.data.BoatDataManager;
+import newpilotapp.drivers.GpsDriver;
 import newpilotapp.framework.data.LiveDataObserver;
 import newpilotapp.gui.TabbedContentPane.ContentPane;
 
@@ -20,12 +21,15 @@ import newpilotapp.gui.TabbedContentPane.ContentPane;
  */
 public class DriverDisplayContentPane extends ContentPane {
     
+    private GpsDriver.GpsData data = null;
+    
     Font boldFont = new Font ("Arial", Font.BOLD, 150);
 
     public DriverDisplayContentPane() {
-        BoatDataManager.telemetryHeading.observe(new LiveDataObserver<Double>() {
+        BoatDataManager.remoteGpsData.observe(new LiveDataObserver<GpsDriver.GpsData>() {
             @Override
-            public void update(Double data) {
+            public void update(GpsDriver.GpsData data) {
+                DriverDisplayContentPane.this.data = data;
                 repaint();
             }
         
@@ -37,6 +41,7 @@ public class DriverDisplayContentPane extends ContentPane {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        if(data == null) return;
         
         Graphics2D g2 = (Graphics2D) g;
         
@@ -69,7 +74,7 @@ public class DriverDisplayContentPane extends ContentPane {
         
         
         
-        double drawAngle = BoatDataManager.telemetryHeading.getValue(); // bearing
+        double drawAngle = data.speed; // bearing
                 
         g2.setColor(Color.BLUE);
         g2.drawLine(

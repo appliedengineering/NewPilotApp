@@ -29,14 +29,14 @@ public class CompassDriver { // for sector2b, labeled on the diagram in the soft
     public CompassDriver(MutableLiveData<CompassData> compassHeading, String port) {
         this.compassHeading = compassHeading;
         sector2bSerial = new SerialDriver();
-        sector2bSerial.setReadTimeout(50);
+        sector2bSerial.setReadTimeout(10);
         sector2bSerial.setSerialPortName(port); // port location
     }
     
     public CompassDriver(MutableLiveData<CompassData> compassHeading, String port, SerialDriver ser) {
         this.compassHeading = compassHeading;
         sector2bSerial = ser;
-        sector2bSerial.setReadTimeout(50);
+        sector2bSerial.setReadTimeout(10);
         sector2bSerial.setSerialPortName(port); // port location
         
     }

@@ -53,11 +53,16 @@ public class StepperDriver { // part of Sector2a
         double differenceAngle = angleToReach - currentAngle;
         if(differenceAngle > 180) differenceAngle -= 360;
         
-        double differenceSteps = differenceAngle/360*200;
+        short differenceSteps = (short) (angleToReach/360*200.*1);
+        // 3200
+        
+        byte first = (byte) (differenceSteps / 100);
+        byte second = (byte) (differenceSteps % 100);
+
 
         
         try{
-            stepperSerial.recieveData(new byte[]{(byte) (angleToReach/360*200)});
+            stepperSerial.recieveData(new byte[]{first, second});
 
 //            if(Math.abs(differenceSteps) < 2) {
 //                stepperSerial.recieveData(STEPPER_COMMAND_STOP);

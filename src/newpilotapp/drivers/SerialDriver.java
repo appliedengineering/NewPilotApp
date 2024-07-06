@@ -6,6 +6,8 @@ package newpilotapp.drivers;
 
 import com.fazecast.jSerialComm.SerialPort;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import newpilotapp.data.BoatDataManager;
 import newpilotapp.logging.Console;
 
@@ -94,8 +96,11 @@ public class SerialDriver extends Driver {
     public SerialData recieveData(byte[] command) {
         SerialData serialData = new SerialData();
         if(serialPort == null) {
-            // restart
-            this.init(false);
+            try {
+                // delay before restart
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {}
+            this.init(false); // restart
             // if its still null, just return blank data
             if(serialPort == null) return serialData;
         }

@@ -115,7 +115,11 @@ public class BoatDataManager {
     public static MutableLiveData<String> portCompassAndGps = new MutableLiveData<>("");
     public static MutableLiveData<String> portStepper = new MutableLiveData<>("");
     public static MutableLiveData<String> portBoatstationElecData = new MutableLiveData<>("");
+    public static MutableLiveData<String> portElec = new MutableLiveData<>("");
+
     public static MutableLiveData<String> networkBoatAddress = new MutableLiveData<>("");
+    public static MutableLiveData<String> mapDataPath = new MutableLiveData<>("");
+
 
     
     
@@ -127,9 +131,12 @@ public class BoatDataManager {
             Properties props = new Properties();
             props.load(inputStream);
             portCompassAndGps.setValue(props.getProperty("portCompassAndGps"));
+            portElec.setValue(props.getProperty("portElec"));
             portStepper.setValue(props.getProperty("portStepper"));
             portBoatstationElecData.setValue(props.getProperty("portBoatstationElecData"));
             networkBoatAddress.setValue(props.getProperty("networkBoatAddress"));
+            mapDataPath.setValue(props.getProperty("mapDataPath"));
+
 
             
             Console.log("Settings Loaded!");
@@ -157,6 +164,10 @@ public class BoatDataManager {
             props.put("portStepper", portStepper.getValue());
             props.put("portBoatstationElecData", portBoatstationElecData.getValue());
             props.put("networkBoatAddress", networkBoatAddress.getValue());
+            props.put("mapDataPath", mapDataPath.getValue());
+            props.put("portElec", portElec.getValue());
+
+
 
             
             String path = isBoatstationMode ? "boatSettings.properties" : "groundSettings.properties";

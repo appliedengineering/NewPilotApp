@@ -11,6 +11,7 @@ import newpilotapp.data.BoatDataManager;
 import newpilotapp.drivers.BatteryVoltageDriver;
 import newpilotapp.drivers.GpsDriver;
 import newpilotapp.drivers.CompassDriver;
+import newpilotapp.drivers.ElecDataDriver;
 import newpilotapp.drivers.GpsCalc;
 import newpilotapp.drivers.SerialDriver;
 import newpilotapp.drivers.SerialDriver.SerialData;
@@ -31,13 +32,19 @@ public class HardwareDriverLoop implements Runnable {
     private GpsDriver gpsDriver = new GpsDriver(BoatDataManager.localGpsData, compassAndGpsSerialPort, compassAndGpsSerial);
 
     
+    
     private SerialDriver stepperAndBattSerial = new SerialDriver();
     private String stepperAndBattSerialPort = BoatDataManager.portStepper.getValue();
     private StepperDriver stepperDriver = new StepperDriver(stepperAndBattSerialPort, stepperAndBattSerial);
     private BatteryVoltageDriver battDriver = new BatteryVoltageDriver(BoatDataManager.battVoltage, stepperAndBattSerialPort, stepperAndBattSerial);
 
+    private String elecSerialPort = BoatDataManager.portElec.getValue();
+
+    private SerialDriver elecSerialDriver = new SerialDriver();
     
-    private SerialDriver motorControllerDriver = new SerialDriver();
+    private ElecDataDriver elecDriver = new ElecDataDriver(BoatDataManager.portElec.getValue() ,elecSerialDriver);
+    
+//    private SerialDriver motorControllerDriver = new SerialDriver();
     
     
 
@@ -45,9 +52,14 @@ public class HardwareDriverLoop implements Runnable {
     
     public volatile boolean isRunning = false;
     
-    public volatile long runDelay = 100;
+    public volatile long runDelay = 0;
         
     private void init() {
+        try {
+        elecDriver.init();
+        } catch (Exception e) {
+            Console.error(e.getMessage());
+        }
         try {
         compassDriver.init();
         } catch (Exception e) {
@@ -80,13 +92,14 @@ public class HardwareDriverLoop implements Runnable {
         while(isRunning){
             try {
                 compassDriver.recieveData();
+                elecDriver.recieveData();
 
                 if(System.currentTimeMillis()-gpsLastRead > 500) { // read gps values every half second
                     gpsDriver.recieveData();
                     gpsLastRead = System.currentTimeMillis();
                 }
                 
-                if(System.currentTimeMillis()-battLastRead > 1000) { // read battery voltage every second
+                if(System.currentTimeMillis()-battLastRead > 5000) { // read battery voltage every second
                     battDriver.recieveData();
                     battLastRead = System.currentTimeMillis();
 
@@ -109,10 +122,15 @@ public class HardwareDriverLoop implements Runnable {
 //                    
 //                    // ex. telemetryHeading = 0
 
-                if(BoatDataManager.compassHeading.getValue() != null){
+                if(BoatDataManager.remoteGpsData.getValue() != null && BoatDataManager.localGpsData.getValue() != null){
                     
-                    double direction = 360-BoatDataManager.compassHeading.getValue().compassHeading;
-                    stepperDriver.sendData(direction); // stepper motor updates itself based on current conditions
+//                    double direction = 360-BoatDataManager.compassHeading.getValue().compassHeading;
+                    double heading = GpsCalc.findHeading(BoatDataManager.remoteGpsData.getValue(), BoatDataManager.localGpsData.getValue())-BoatDataManager.compassHeading.getValue().compassHeading;
+                    if(heading < 0) heading += 360;
+                    
+                    BoatDataManager.telemetryHeading.setValue(heading);
+        
+                    stepperDriver.sendData(heading); // stepper motor updates itself based on current conditions
                 }
                 }//sector2aDriver.sendData();    
 

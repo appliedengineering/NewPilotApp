@@ -13,26 +13,22 @@ import newpilotapp.logging.Console;
  *
  * @author Jeffrey
  */
-public class BatteryVoltageDriver { // for sector2b, labeled on the diagram in the software folder
+public class ElecDataDriver { // for sector2b, labeled on the diagram in the software folder
     
     
     SerialDriver sector2bSerial;
     
     
-    private static final byte[] BATT_COMMAND_BYTES = new byte[] {(byte) 222,(byte) 222};
-    
-    private MutableLiveData<Double> battVoltage;
-    
+    private static final byte[] ELEC_COMMAND_BYTES = new byte[] {'E'};
+        
 
-    public BatteryVoltageDriver(MutableLiveData<Double> battVoltage, String port) {
-        this.battVoltage = battVoltage;
+    public ElecDataDriver(String port) {
         sector2bSerial = new SerialDriver();
         sector2bSerial.setReadTimeout(50);
         sector2bSerial.setSerialPortName(port); // port location
     }
     
-    public BatteryVoltageDriver(MutableLiveData<Double> battVoltage, String port, SerialDriver ser) {
-        this.battVoltage = battVoltage;
+    public ElecDataDriver(String port, SerialDriver ser) {
         sector2bSerial = ser;
         sector2bSerial.setReadTimeout(50);
         sector2bSerial.setSerialPortName(port); // port location
@@ -49,17 +45,31 @@ public class BatteryVoltageDriver { // for sector2b, labeled on the diagram in t
     }
 
     public void recieveData() {
-        SerialData serialData = sector2bSerial.recieveData(BATT_COMMAND_BYTES);
+        System.out.println("elec data");
+
+        SerialData serialData = sector2bSerial.recieveData(ELEC_COMMAND_BYTES);
+        System.out.println(serialData.byteData);
+
         // try to parse data, catch exceptions
         try {
+             System.out.println(serialData.byteData.length);
+
             String s = new String(serialData.byteData, "UTF-8");
+            String[] tokens = s.split("/");
+            System.out.println(tokens[1]);
+
+            if(serialData.byteData.length >= 4) {
+                BoatDataManager.elecVoltage.setValue((double) Double.parseDouble(tokens[0]));
+                BoatDataManager.elecCurrent.setValue((double) Double.parseDouble(tokens[1]));
+
+//                BoatDataManager.elecCurrent.setValue((double) serialData.byteData[1]);
+
+            }
             
-            battVoltage.setValue(Double.parseDouble(s));
             
         } catch (Exception e) {
 //            e.printStackTrace();
             // corrupted data
-            battVoltage.setValue(-1.0);
         }
     }
     
