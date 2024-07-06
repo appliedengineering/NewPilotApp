@@ -75,6 +75,9 @@ public class DriverDisplayContentPane extends ContentPane {
         
         
         double drawAngle = data.speed; // bearing
+        
+        String drawResult = String.format("%.1f", drawAngle);
+
                 
         g2.setColor(Color.BLUE);
         g2.drawLine(
@@ -83,7 +86,7 @@ public class DriverDisplayContentPane extends ContentPane {
                 (int) (getWidth()/2+(r-border)/2*Math.cos(drawAngle/180*Math.PI)), 
                 (int) (r/2+(r-border)/2*Math.sin(drawAngle/180*Math.PI)));
         
-        g2.drawString((int) drawAngle+"", getWidth()/2-r/2, r*3/2);
+        g2.drawString(drawResult, getWidth()/2-r/2, r*3/2);
         
         g2.setColor(Color.BLACK);
         
@@ -93,7 +96,7 @@ public class DriverDisplayContentPane extends ContentPane {
                 (int) (getWidth()/2 - r +(r-border)/2*Math.cos(drawAngle/180*Math.PI)), 
                 (int) (r/2+(r-border)/2*Math.sin(drawAngle/180*Math.PI)));
         
-        g2.drawString((int) drawAngle+"", getWidth()/2-r*3/2, r*3/2);
+        g2.drawString(drawResult, getWidth()/2-r*3/2, r*3/2);
         
         g2.setColor(Color.RED);
         
@@ -103,7 +106,7 @@ public class DriverDisplayContentPane extends ContentPane {
                 (int) (getWidth()/2 + r +(r-border)/2*Math.cos(drawAngle/180*Math.PI)), 
                 (int) (r/2+(r-border)/2*Math.sin(drawAngle/180*Math.PI)));
         
-        g2.drawString((int) drawAngle+"", getWidth()/2+r/2, r*3/2);
+        g2.drawString(drawResult, getWidth()/2+r/2, r*3/2);
         
         // g2.drawString(drawAngle+" deg", getWidth()/2-r/2, r*2);
         //g2.drawArc(getWidth()/2 - (r-border)/2, getHeight()/2 - (r-border)/2, r, r, 0, 360);
