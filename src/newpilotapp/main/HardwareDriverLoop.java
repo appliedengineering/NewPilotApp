@@ -122,16 +122,16 @@ public class HardwareDriverLoop implements Runnable {
 //                    
 //                    // ex. telemetryHeading = 0
 
-                if(BoatDataManager.remoteGpsData.getValue() != null && BoatDataManager.localGpsData.getValue() != null){
-                    
-//                    double direction = 360-BoatDataManager.compassHeading.getValue().compassHeading;
-                    double heading = GpsCalc.findHeading(BoatDataManager.remoteGpsData.getValue(), BoatDataManager.localGpsData.getValue())-BoatDataManager.compassHeading.getValue().compassHeading;
-                    if(heading < 0) heading += 360;
-                    
-                    BoatDataManager.telemetryHeading.setValue(heading);
-        
-                    stepperDriver.sendData(heading); // stepper motor updates itself based on current conditions
-                }
+                    if(BoatDataManager.remoteGpsData.getValue() != null && BoatDataManager.localGpsData.getValue() != null){
+
+    //                    double direction = 360-BoatDataManager.compassHeading.getValue().compassHeading;
+                        double heading = GpsCalc.findHeading(BoatDataManager.remoteGpsData.getValue(), BoatDataManager.localGpsData.getValue())-BoatDataManager.compassHeading.getValue().compassHeading;
+                        if(heading < 0) heading += 360;
+
+                        BoatDataManager.telemetryHeading.setValue(heading);
+
+                        stepperDriver.sendData(heading); // stepper motor updates itself based on current conditions
+                    }
                 }//sector2aDriver.sendData();    
 
             } catch (Exception e) {

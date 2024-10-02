@@ -76,7 +76,9 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         main.setLayout(new BorderLayout());
         
         gpsLocalData = new JLabel();
+        gpsLocalData.setForeground(Color.BLUE);
         gpsRemoteData = new JLabel();
+        gpsRemoteData.setForeground(Color.RED);
                 
         setUpMap();
         
@@ -251,13 +253,14 @@ public class TelemetryContentPane extends TabbedContentPane.ContentPane{
         viewer.addMapPolygon(path);
         
         if(local != null) {
-            MapMarker localMark = new MapMarkerDot(Color.BLUE, local.lat, local.lon);
-            
+            MapMarkerDot localMark = new MapMarkerDot(Color.BLUE, local.lat, local.lon);
+            localMark.setBackColor(Color.BLUE);
             viewer.addMapMarker(localMark);
         }
 
         if(remote != null) {
-            MapMarker remoteMark = new MapMarkerDot(Color.RED, remote.lat, remote.lon);
+            MapMarkerDot remoteMark = new MapMarkerDot(Color.RED, remote.lat, remote.lon);
+            remoteMark.setBackColor(Color.RED);
             viewer.addMapMarker(remoteMark);
         }
         

@@ -32,7 +32,7 @@ public class OsmTileLoader implements TileLoader {
     
     private static String location =  "map%d_%d_%d.png";
 
-    private static final boolean CACHE_WRITE_ENABLE = false;
+    private static final boolean CACHE_WRITE_ENABLE = true;
 
     
     private static final ThreadPoolExecutor jobDispatcher = (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
